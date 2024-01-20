@@ -1,0 +1,15 @@
+volumes:
+  pgdata:
+
+services:
+  postgres_db:
+    image: postgres:16.1-alpine3.19
+    ports:
+      - 5000:5432
+    restart: always
+    environment:
+      - POSTGRES_DB=task_manager_db
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
