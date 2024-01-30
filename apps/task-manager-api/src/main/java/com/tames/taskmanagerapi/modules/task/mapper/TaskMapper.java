@@ -19,7 +19,7 @@ public class TaskMapper {
             task.getId(),
             task.getDescription(),
             task.getTitle(),
-            dueDateFormatter.format(task.getDueDate()),
+            task.getDueDate(),
             task.getStatus(),
             task.getPriority()
         );

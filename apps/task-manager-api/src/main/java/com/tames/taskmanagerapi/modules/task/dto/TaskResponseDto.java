@@ -9,7 +9,7 @@ public record TaskResponseDto(
     Long id,
     String description,
     String title,
-    String dueDate,
+    LocalDate dueDate,
     Status status,
     Priority priority
 ) {}
