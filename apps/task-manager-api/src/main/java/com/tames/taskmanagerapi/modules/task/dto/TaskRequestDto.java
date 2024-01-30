@@ -5,7 +5,9 @@ import java.time.LocalDate;
 public record TaskRequestDto(
     String description,
     String title,
-    String dueDate
+    String dueDate,
+    String status,
+    String priority
 ) {
 
 }

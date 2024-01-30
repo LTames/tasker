@@ -43,6 +43,8 @@ public class TaskService {
         task.setDescription(updateData.getDescription());
         task.setTitle(updateData.getTitle());
         task.setDueDate(updateData.getDueDate());
+        task.setPriority(updateData.getPriority());
+        task.setStatus(updateData.getStatus());
 
         return taskMapper.toDto(taskRepository.save(task));
     }
