@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class TaskMapper {
-    private static final DateTimeFormatter dueDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter dueDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public TaskResponseDto toDto(Task task) {
         return new TaskResponseDto(
