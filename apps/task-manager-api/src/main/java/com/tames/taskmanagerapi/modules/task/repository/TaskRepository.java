@@ -2,7 +2,6 @@ package com.tames.taskmanagerapi.modules.task.repository;
 
 import com.tames.taskmanagerapi.modules.task.entity.Task;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;
