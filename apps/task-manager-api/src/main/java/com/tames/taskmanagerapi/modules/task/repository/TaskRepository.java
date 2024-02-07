@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface TaskRepository extends ListCrudRepository<Task, Long> {
     @Override
-    @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, attributePaths = {"categories"})
+    @EntityGraph(value =  "Task.WITH_CATEGORIES", type = EntityGraph.EntityGraphType.LOAD)
     List<Task> findAll();
 
     @Override
-    @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, attributePaths = {"categories"})
+    @EntityGraph(value =  "Task.WITH_CATEGORIES", type = EntityGraph.EntityGraphType.LOAD)
     Optional<Task> findById(Long id);
 }
