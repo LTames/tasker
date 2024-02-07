@@ -16,7 +16,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -42,7 +41,7 @@ public class TaskController {
     }
 
     @GetMapping("{id}")
-    @Operation(summary = "Get a task by its ID", description = "Retrieve detailed information about a specific task using its unique identifier.")
+    @Operation(summary = "Get a task by its ID", description = "Retrieve detailed information about a specific task by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved task", content = @Content(schema = @Schema(implementation = TaskResponseDto.class))),
         @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
@@ -68,7 +67,7 @@ public class TaskController {
     }
 
     @PutMapping("{id}")
-    @Operation(summary = "Update an existing task", description = "Update the details of an existing task using its unique identifier.")
+    @Operation(summary = "Update an existing task", description = "Update the details of an existing task by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Task updated successfully", content = @Content(schema = @Schema(implementation = TaskResponseDto.class))),
         @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
@@ -79,7 +78,7 @@ public class TaskController {
     }
 
     @DeleteMapping("{id}")
-    @Operation(summary = "Delete a task by its ID", description = "Delete a specific task using its unique identifier.")
+    @Operation(summary = "Delete a task by its ID", description = "Delete a specific task by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Deleted with success"),
         @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))

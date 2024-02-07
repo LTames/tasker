@@ -1,10 +1,12 @@
 package com.tames.taskmanagerapi.modules.task.dto;
 
+import com.tames.taskmanagerapi.modules.category.dto.CategoryResponseDto;
 import com.tames.taskmanagerapi.modules.task.enums.Priority;
 import com.tames.taskmanagerapi.modules.task.enums.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record TaskResponseDto(
 
@@ -22,6 +24,8 @@ public record TaskResponseDto(
 
     Status status,
 
-    Priority priority
+    Priority priority,
+
+    List<CategoryResponseDto> categories
 ) {}
 

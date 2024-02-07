@@ -5,8 +5,12 @@ import com.tames.taskmanagerapi.modules.task.enums.Priority;
 import com.tames.taskmanagerapi.modules.task.enums.Status;
 import com.tames.taskmanagerapi.shared.validation.DateValidator;
 import com.tames.taskmanagerapi.shared.validation.EnumValidator;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
 
 public record TaskRequestDto(
     @NotBlank(message = "Description is required.")
@@ -30,7 +34,11 @@ public record TaskRequestDto(
     @NotBlank(message = "Priority is required.")
     @EnumValidator(enumClass = Priority.class, message = "Given priority is not valid.")
     @Schema(implementation = Priority.class)
-    String priority
+    String priority,
+
+    @NotNull(message = "An array of category IDs is required.")
+    @ArraySchema(arraySchema = @Schema(example = "1"))
+    List<Long> categoryIds
 ) {
 
 }

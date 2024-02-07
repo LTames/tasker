@@ -1,14 +1,21 @@
 package com.tames.taskmanagerapi.modules.task.entity;
 
+import com.tames.taskmanagerapi.modules.category.entity.Category;
 import com.tames.taskmanagerapi.modules.task.enums.Priority;
 import com.tames.taskmanagerapi.modules.task.enums.Status;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "task")
+@NamedEntityGraphs(value = {
+    @NamedEntityGraph(name = "Task.WITH_CATEGORIES", attributeNodes = {
+        @NamedAttributeNode("categories")
+    })
+})
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +32,20 @@ public class Task {
     private LocalDate dueDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "priority")
     private Priority priority;
 
-//    private List<Category> categories;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "task_category", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories;
+
 //    private List<User> collaborators;
 //    private User author;
+//    private List<Comments> comments;
 
     public Task() {}
 
@@ -42,6 +55,7 @@ public class Task {
         this.dueDate = dueDate;
         this.status = status;
         this.priority = priority;
+        this.categories = new ArrayList<>();
     }
 
     public Long getId() {
@@ -91,4 +105,17 @@ public class Task {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+    }
+
 }

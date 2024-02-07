@@ -1,6 +1,8 @@
 package com.tames.taskmanagerapi.modules.task.exception;
 
-public class TaskNotFoundException extends RuntimeException {
+import jakarta.persistence.EntityNotFoundException;
+
+public class TaskNotFoundException extends EntityNotFoundException {
     public TaskNotFoundException(Long id) {
         super("Task not found with id: " + id);
     }

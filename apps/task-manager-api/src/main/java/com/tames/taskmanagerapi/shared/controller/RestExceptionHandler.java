@@ -3,6 +3,7 @@ package com.tames.taskmanagerapi.shared.controller;
 import com.tames.taskmanagerapi.modules.task.exception.TaskNotFoundException;
 import com.tames.taskmanagerapi.shared.dto.ApiResponseDto;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,8 @@ import java.util.function.IntFunction;
 @RestControllerAdvice()
 public class RestExceptionHandler {
 
-    @ExceptionHandler(TaskNotFoundException.class)
-    public ResponseEntity<ApiResponseDto> handleTaskNotFound(TaskNotFoundException e, HttpServletRequest req) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ApiResponseDto> handleEntityNotFound(EntityNotFoundException e, HttpServletRequest req) {
         return buildApiResponse(HttpStatus.NOT_FOUND, e.getMessage(), req.getServletPath());
     }
 
