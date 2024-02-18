@@ -12,5 +12,11 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /api-docs.html
-  default-consumes-media-type: application/json 
+  default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
+jwt:
+  private:
+    key: classpath:private.pem
+  public:
+    key: classpath:public.pem
