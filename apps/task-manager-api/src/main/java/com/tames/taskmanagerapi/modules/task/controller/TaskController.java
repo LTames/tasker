@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Tasks")
-@SecurityRequirement(name = "Bearer Authentication")
+@SecurityRequirement(name = "JWT")
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;

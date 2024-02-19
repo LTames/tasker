@@ -22,7 +22,7 @@ public record TaskRequestDto(
     String title,
 
     @NotBlank(message = "Due date is required.")
-    @DateValidator(dateFormat = "yyyy-MM-dd", message = "Invalid date format. Please provide the date in the format yyyy-MM-dd")
+    @DateValidator(dateFormat = "yyyy-MM-dd", message = "Invalid date format. Please provide the date in the format yyyy-MM-dd.")
     @Schema(example = "2024-01-31", format = "date")
     String dueDate,
 
@@ -37,7 +37,7 @@ public record TaskRequestDto(
     String priority,
 
     @NotNull(message = "An array of category IDs is required.")
-    @ArraySchema(arraySchema = @Schema(example = "1"))
+    @ArraySchema(schema = @Schema(example = "1"))
     List<Long> categoryIds
 ) {
 

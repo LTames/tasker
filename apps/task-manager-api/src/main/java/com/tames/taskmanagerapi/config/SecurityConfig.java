@@ -3,6 +3,7 @@ package com.tames.taskmanagerapi.config;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.tames.taskmanagerapi.security.JwtAuthenticationEntryPoint;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,11 @@ import java.security.interfaces.RSAPublicKey;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final static String[] PERMIT_ALL_MATCHERS = {
+        "/api-docs/**",
+        "swagger-ui/**"
+    };
+
     @Value("${jwt.public.key}")
     private RSAPublicKey jwtPublicKey;
 
@@ -38,16 +44,17 @@ public class SecurityConfig {
     private RSAPrivateKey jwtPrivateKey;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationEntryPoint authEntryPoint) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers(PERMIT_ALL_MATCHERS).permitAll()
                 .anyRequest().authenticated())
             .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(Customizer.withDefaults()))
-            .httpBasic(Customizer.withDefaults());
+                .jwt(Customizer.withDefaults())
+                .authenticationEntryPoint(authEntryPoint));
 
         return http.build();
     }
