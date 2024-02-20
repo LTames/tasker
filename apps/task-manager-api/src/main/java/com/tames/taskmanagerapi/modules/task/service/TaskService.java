@@ -25,19 +25,17 @@ public class TaskService {
     }
 
     public TaskResponseDto getTaskById(Long id) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-
+        Task task = findTaskById(id);
         return taskMapper.toDto(task);
     }
 
     public TaskResponseDto createTask(TaskRequestDto taskRequestDTO)  {
         Task task = taskRepository.save(taskMapper.toEntity(taskRequestDTO));
-
         return taskMapper.toDto(task);
     }
 
     public TaskResponseDto updateTask(Long id, TaskRequestDto taskRequestDto) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+        Task task = findTaskById(id);
         Task updateData = taskMapper.toEntity(taskRequestDto);
 
         task.setDescription(updateData.getDescription());
@@ -50,7 +48,12 @@ public class TaskService {
     }
 
     public void deleteTaskById(Long id) {
-        taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+        findTaskById(id);
+
         taskRepository.deleteById(id);
+    }
+
+    private Task findTaskById(Long id) {
+        return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
     }
 }
