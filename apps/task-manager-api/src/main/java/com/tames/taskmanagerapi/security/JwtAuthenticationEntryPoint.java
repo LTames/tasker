@@ -1,7 +1,8 @@
 package com.tames.taskmanagerapi.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tames.taskmanagerapi.shared.dto.ApiResponseDto;
+import com.tames.taskmanagerapi.shared.dto.ApiDefaultResponseDto;
+import com.tames.taskmanagerapi.shared.dto.ApiValidationResponseDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,12 +33,12 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         delegate.commence(request, response, authException);
 
         if (authException.getCause() instanceof BadJwtException badJwtException) {
-            ApiResponseDto body = new ApiResponseDto(
-                Instant.now(),
+            ApiValidationResponseDto body = new ApiValidationResponseDto(
                 "Invalid token",
                 HttpStatus.UNAUTHORIZED.value(),
+                request.getServletPath(),
                 extractErrors(badJwtException),
-                request.getServletPath()
+                Instant.now()
             );
 
             mapper.writeValue(response.getWriter(), body);

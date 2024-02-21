@@ -1,6 +1,7 @@
 package com.tames.taskmanagerapi.shared.controller;
 
-import com.tames.taskmanagerapi.shared.dto.ApiResponseDto;
+import com.tames.taskmanagerapi.shared.dto.ApiDefaultResponseDto;
+import com.tames.taskmanagerapi.shared.dto.ApiValidationResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -17,31 +18,33 @@ import java.util.List;
 public class RestExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiResponseDto> handleEntityNotFound(EntityNotFoundException e, HttpServletRequest req) {
-        return buildApiResponse(HttpStatus.NOT_FOUND, e.getMessage(), req.getServletPath());
+    public ResponseEntity<ApiDefaultResponseDto> handleEntityNotFound(EntityNotFoundException e, HttpServletRequest req) {
+        ApiDefaultResponseDto response = new ApiDefaultResponseDto(
+            "Entity not found",
+            HttpStatus.NOT_FOUND.value(),
+            req.getServletPath(),
+            e.getMessage(),
+            Instant.now()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponseDto> handleArgumentNotValidException(MethodArgumentNotValidException e,
-            HttpServletRequest req) {
-        List<String> errors = e.getBindingResult().getFieldErrors()
+    public ResponseEntity<ApiValidationResponseDto> handleArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest req) {
+        List<String> fieldErrors = e.getBindingResult().getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
 
-        return buildApiResponse(HttpStatus.BAD_REQUEST, "Invalid request body", req.getServletPath(), errors);
-    }
+        ApiValidationResponseDto response = new ApiValidationResponseDto(
+            "Invalid request body",
+            HttpStatus.BAD_REQUEST.value(),
+            req.getServletPath(),
+            fieldErrors,
+            Instant.now()
+        );
 
-    private ResponseEntity<ApiResponseDto> buildApiResponse(HttpStatus status, String message, String instance) {
-        List<String> errors = List.of(status.getReasonPhrase());
-
-        ApiResponseDto response = new ApiResponseDto(Instant.now(), message, status.value(), errors, instance);
-        return new ResponseEntity<>(response, status);
-    }
-
-    private ResponseEntity<ApiResponseDto> buildApiResponse(HttpStatus status, String message, String instance,
-            List<String> errors) {
-        ApiResponseDto response = new ApiResponseDto(Instant.now(), message, status.value(), errors, instance);
-        return new ResponseEntity<>(response, status);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

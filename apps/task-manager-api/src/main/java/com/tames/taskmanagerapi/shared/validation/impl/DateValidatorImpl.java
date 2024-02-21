@@ -15,7 +15,7 @@ public class DateValidatorImpl implements ConstraintValidator<DateValidator, Str
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
-            return false;
+            return true;
         }
 
         try {

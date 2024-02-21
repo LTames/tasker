@@ -3,7 +3,8 @@ package com.tames.taskmanagerapi.modules.task.controller;
 import com.tames.taskmanagerapi.modules.task.dto.TaskRequestDto;
 import com.tames.taskmanagerapi.modules.task.dto.TaskResponseDto;
 import com.tames.taskmanagerapi.modules.task.service.TaskService;
-import com.tames.taskmanagerapi.shared.dto.ApiResponseDto;
+import com.tames.taskmanagerapi.shared.dto.ApiDefaultResponseDto;
+import com.tames.taskmanagerapi.shared.dto.ApiValidationResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -46,7 +47,7 @@ public class TaskController {
     @Operation(summary = "Get a task by its ID", description = "Retrieve detailed information about a specific task by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved task", content = @Content(schema = @Schema(implementation = TaskResponseDto.class))),
-        @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+        @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiDefaultResponseDto.class)))
     })
     @Parameter(name = "id", description = "Task id", example = "1")
     public ResponseEntity<TaskResponseDto> getTaskById(
@@ -58,7 +59,8 @@ public class TaskController {
     @PostMapping()
     @Operation(summary = "Create a new task", description = "Create a new task with the provided details.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Task created successfully", content = @Content(schema = @Schema(implementation = TaskResponseDto.class)))
+        @ApiResponse(responseCode = "201", description = "Task created successfully", content = @Content(schema = @Schema(implementation = TaskResponseDto.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(implementation = ApiValidationResponseDto.class))),
     })
     public ResponseEntity<TaskResponseDto> createTask(@Valid @RequestBody TaskRequestDto body, UriComponentsBuilder ucb) {
         TaskResponseDto task = taskService.createTask(body);
@@ -72,7 +74,8 @@ public class TaskController {
     @Operation(summary = "Update an existing task", description = "Update the details of an existing task by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Task updated successfully", content = @Content(schema = @Schema(implementation = TaskResponseDto.class))),
-        @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+        @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(implementation = ApiValidationResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiDefaultResponseDto.class)))
     })
     @Parameter(name = "id", description = "Task id", example = "1")
     public ResponseEntity<TaskResponseDto> updateTask(@PathVariable("id") Long taskId, @Valid @RequestBody TaskRequestDto body) {
@@ -83,7 +86,7 @@ public class TaskController {
     @Operation(summary = "Delete a task by its ID", description = "Delete a specific task by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Deleted with success"),
-        @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+        @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiDefaultResponseDto.class)))
     })
     @Parameter(name = "id", description = "Task id", example = "1")
     public ResponseEntity<Void> deleteTaskById(

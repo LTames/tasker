@@ -3,7 +3,8 @@ package com.tames.taskmanagerapi.modules.category.controller;
 import com.tames.taskmanagerapi.modules.category.dto.CategoryRequestDto;
 import com.tames.taskmanagerapi.modules.category.dto.CategoryResponseDto;
 import com.tames.taskmanagerapi.modules.category.service.CategoryService;
-import com.tames.taskmanagerapi.shared.dto.ApiResponseDto;
+import com.tames.taskmanagerapi.shared.dto.ApiDefaultResponseDto;
+import com.tames.taskmanagerapi.shared.dto.ApiValidationResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -47,7 +48,7 @@ public class CategoryController {
     @Operation(summary = "Get category by ID", description = "Retrieve a category by its ID.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved the category.", content = @Content(schema = @Schema(implementation = CategoryResponseDto.class))),
-        @ApiResponse(responseCode = "404", description = "Category not found.", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+        @ApiResponse(responseCode = "404", description = "Category not found.", content = @Content(schema = @Schema(implementation = ApiDefaultResponseDto.class)))
     })
     @Parameter(name = "id", description = "Category id", example = "1")
     public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable("id") Long categoryId) {
@@ -57,7 +58,8 @@ public class CategoryController {
     @PostMapping()
     @Operation(summary = "Create a new category", description = "Create a new category.")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Category created successfully.", content = @Content(schema = @Schema(implementation = CategoryResponseDto.class)))
+        @ApiResponse(responseCode = "201", description = "Category created successfully.", content = @Content(schema = @Schema(implementation = CategoryResponseDto.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(implementation = ApiValidationResponseDto.class))),
     })
     public ResponseEntity<CategoryResponseDto> createCategory(@Valid @RequestBody CategoryRequestDto body, UriComponentsBuilder ucb) {
         CategoryResponseDto createdCategory = categoryService.createCategory(body);
@@ -71,7 +73,8 @@ public class CategoryController {
     @Operation(summary = "Update category by ID", description = "Update an existing category by its ID.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Category updated successfully.", content = @Content(schema = @Schema(implementation = CategoryResponseDto.class))),
-        @ApiResponse(responseCode = "404", description = "Category not found.", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+        @ApiResponse(responseCode = "404", description = "Category not found.", content = @Content(schema = @Schema(implementation = ApiDefaultResponseDto.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(implementation = ApiValidationResponseDto.class))),
     })
     @Parameter(name = "id", description = "Category id", example = "1")
     public ResponseEntity<CategoryResponseDto> updateCategory(@Valid @RequestBody CategoryRequestDto body, @PathVariable("id") Long categoryId) {
@@ -82,7 +85,7 @@ public class CategoryController {
     @Operation(summary = "Delete category by ID", description = "Delete a category by its ID.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Category deleted successfully."),
-        @ApiResponse(responseCode = "404", description = "Category not found.", content = @Content(schema = @Schema(implementation = ApiResponseDto.class)))
+        @ApiResponse(responseCode = "404", description = "Category not found.", content = @Content(schema = @Schema(implementation = ApiDefaultResponseDto.class)))
     })
     @Parameter(name = "id", description = "Category id", example = "1")
     public ResponseEntity<Void> deleteCategoryById(@PathVariable("id") Long categoryId) {

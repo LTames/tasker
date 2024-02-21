@@ -37,7 +37,7 @@ public record TaskRequestDto(
     String priority,
 
     @NotNull(message = "An array of category IDs is required.")
-    @ArraySchema(schema = @Schema(example = "1"))
+    @ArraySchema(arraySchema = @Schema(example = "[1, 2]"))
     List<Long> categoryIds
 ) {
 
