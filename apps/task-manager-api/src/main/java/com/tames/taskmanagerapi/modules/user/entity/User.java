@@ -2,6 +2,7 @@ package com.tames.taskmanagerapi.modules.user.entity;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "app_user")
 public class User {

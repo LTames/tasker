@@ -21,7 +21,7 @@ public class CategoryService {
     }
 
     public CategoryResponseDto getCategoryById(Long id) {
-        Category category = findCategoryById(id);
+        Category category = findCategoryEntityById(id);
         return categoryMapper.toDto(category);
     }
 
@@ -35,7 +35,7 @@ public class CategoryService {
     }
 
     public CategoryResponseDto updateCategory(CategoryRequestDto categoryRequestDto, Long id) {
-        Category category = findCategoryById(id);
+        Category category = findCategoryEntityById(id);
         Category updatedCategory = categoryMapper.toEntity(categoryRequestDto);
 
         category.setName(updatedCategory.getName());
@@ -45,12 +45,10 @@ public class CategoryService {
     }
 
     public void deleteCategoryById(Long id) {
-        findCategoryById(id);
-
-        categoryRepository.deleteById(id);
+        categoryRepository.delete(findCategoryEntityById(id));
     }
 
-    private Category findCategoryById(Long id) {
+    private Category findCategoryEntityById(Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 }

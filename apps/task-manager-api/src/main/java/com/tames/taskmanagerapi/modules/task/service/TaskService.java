@@ -6,6 +6,7 @@ import com.tames.taskmanagerapi.modules.task.entity.Task;
 import com.tames.taskmanagerapi.modules.task.exception.TaskNotFoundException;
 import com.tames.taskmanagerapi.modules.task.mapper.TaskMapper;
 import com.tames.taskmanagerapi.modules.task.repository.TaskRepository;
+import com.tames.taskmanagerapi.modules.user.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,11 +14,13 @@ import java.util.List;
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final UserService userService;
     private final TaskMapper taskMapper;
 
-    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper) {
+    public TaskService(TaskRepository taskRepository, TaskMapper taskMapper, UserService userService) {
         this.taskRepository = taskRepository;
         this.taskMapper = taskMapper;
+        this.userService = userService;
     }
 
     public List<TaskResponseDto> getAllTasks()  {
@@ -25,18 +28,18 @@ public class TaskService {
     }
 
     public TaskResponseDto getTaskById(Long id) {
-        Task task = findTaskById(id);
+        Task task = findTaskEntityById(id);
         return taskMapper.toDto(task);
     }
 
-    public TaskResponseDto createTask(TaskRequestDto taskRequestDTO)  {
-        Task task = taskRepository.save(taskMapper.toEntity(taskRequestDTO));
+    public TaskResponseDto createTask(TaskRequestDto taskRequestDTO, String currentUser)  {
+        Task task = taskRepository.save(taskMapper.toEntity(taskRequestDTO, userService.getUserEntityByUsername(currentUser)));
         return taskMapper.toDto(task);
     }
 
-    public TaskResponseDto updateTask(Long id, TaskRequestDto taskRequestDto) {
-        Task task = findTaskById(id);
-        Task updateData = taskMapper.toEntity(taskRequestDto);
+    public TaskResponseDto updateTask(Long id, TaskRequestDto taskRequestDto, String currentUser) {
+        Task task = findTaskEntityById(id);
+        Task updateData = taskMapper.toEntity(taskRequestDto, userService.getUserEntityByUsername(currentUser));
 
         task.setDescription(updateData.getDescription());
         task.setTitle(updateData.getTitle());
@@ -48,12 +51,10 @@ public class TaskService {
     }
 
     public void deleteTaskById(Long id) {
-        findTaskById(id);
-
-        taskRepository.deleteById(id);
+        taskRepository.delete(findTaskEntityById(id));
     }
 
-    private Task findTaskById(Long id) {
+    public Task findTaskEntityById(Long id) {
         return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
     }
 }

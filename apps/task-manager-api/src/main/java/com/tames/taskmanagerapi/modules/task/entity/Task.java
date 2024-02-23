@@ -1,19 +1,25 @@
 package com.tames.taskmanagerapi.modules.task.entity;
 
 import com.tames.taskmanagerapi.modules.category.entity.Category;
+import com.tames.taskmanagerapi.modules.comment.entity.Comment;
 import com.tames.taskmanagerapi.modules.task.enums.Priority;
 import com.tames.taskmanagerapi.modules.task.enums.Status;
+import com.tames.taskmanagerapi.modules.user.entity.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "task")
 @NamedEntityGraphs(value = {
-    @NamedEntityGraph(name = "Task.WITH_CATEGORIES", attributeNodes = {
-        @NamedAttributeNode("categories")
+    @NamedEntityGraph(name = "Task.ALL", attributeNodes = {
+        @NamedAttributeNode("categories"),
+        @NamedAttributeNode("taskAuthor"),
+        @NamedAttributeNode("comments"),
     })
 })
 public class Task {
@@ -39,23 +45,28 @@ public class Task {
     @Column(name = "priority")
     private Priority priority;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User taskAuthor;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "task_category", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<Category> categories;
+    private Set<Category> categories;
 
-//    private List<User> collaborators;
-//    private User author;
-//    private List<Comments> comments;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task")
+    private Set<Comment> comments;
 
     public Task() {}
 
-    public Task(String description, String title, LocalDate dueDate, Status status, Priority priority) {
+    public Task(String description, String title, LocalDate dueDate, Status status, Priority priority, User taskAuthor) {
         this.description = description;
         this.title = title;
         this.dueDate = dueDate;
         this.status = status;
         this.priority = priority;
-        this.categories = new ArrayList<>();
+        this.taskAuthor = taskAuthor;
+        this.categories = new HashSet<>();
+        this.comments = new HashSet<>();
     }
 
     public Long getId() {
@@ -106,16 +117,35 @@ public class Task {
         this.priority = priority;
     }
 
-    public List<Category> getCategories() {
+    public User getTaskAuthor() {
+        return taskAuthor;
+    }
+
+    public void setTaskAuthor(User taskAuthor) {
+        this.taskAuthor = taskAuthor;
+    }
+
+    public Set<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     public void addCategory(Category category) {
         this.categories.add(category);
     }
 
+    public void addComent(Comment comment) {
+        this.comments.add(comment);
+    }
 }
