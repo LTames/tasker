@@ -1,19 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PrimeNGConfig } from 'primeng/api';
-import { ButtonModule } from 'primeng/button'
+import { TUI_SANITIZER, TuiAlertModule, TuiDialogModule, TuiRootModule } from "@taiga-ui/core";
+import { NgDompurifySanitizer } from "@tinkoff/ng-dompurify";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ButtonModule],
+  imports: [RouterOutlet, TuiRootModule, TuiDialogModule, TuiAlertModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+    providers: [{provide: TUI_SANITIZER, useClass: NgDompurifySanitizer}]
 })
 export class AppComponent {
-  constructor(private primengConfig: PrimeNGConfig) {}
-
-    ngOnInit() {
-        this.primengConfig.ripple = true;
-    }
+  constructor() {}
 }
