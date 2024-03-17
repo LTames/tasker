@@ -1,0 +1,37 @@
+<form
+  *ngIf="registerStatus$ | async as registerStatus"
+  [formGroup]="registerForm"
+>
+  <tui-input formControlName="firstName" class="mb-5">
+    First name
+    <input tuiTextfield />
+  </tui-input>
+  <tui-input formControlName="lastName" class="mb-5">
+    Last name
+    <input tuiTextfield />
+  </tui-input>
+  <tui-input formControlName="username" class="mb-5">
+    Username
+    <input tuiTextfield />
+  </tui-input>
+  <tui-input-password formControlName="password" class="mb-5">
+    Password
+    <input tuiTextfield />
+  </tui-input-password>
+
+  <button
+    [disabled]="registerForm.invalid || registerStatus === 'creating'"
+    (click)="submitRegisterForm()"
+    tuiButton
+    size="m"
+    class="w-full mb-4"
+    [loading]="registerStatus === 'creating'"
+  >
+    Create account
+  </button>
+
+  <span
+    >Already have an account?
+    <a tuiLink [routerLink]="['/auth/login']">Log in</a>
+  </span>
+</form>

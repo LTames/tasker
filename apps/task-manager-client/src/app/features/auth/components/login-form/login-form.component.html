@@ -1,0 +1,26 @@
+<form *ngIf="loginStatus$ | async as loginStatus" [formGroup]="loginForm">
+  <tui-input formControlName="username" class="mb-5">
+    Username
+    <input tuiTextfield />
+  </tui-input>
+  <tui-input-password formControlName="password" class="mb-5">
+    Password
+    <input tuiTextfield />
+  </tui-input-password>
+
+  <button
+    [disabled]="loginForm.invalid || loginStatus === 'authenticating'"
+    (click)="submitForm()"
+    tuiButton
+    size="m"
+    class="w-full mb-4"
+    [loading]="loginStatus === 'authenticating'"
+  >
+    Login
+  </button>
+
+  <span
+    >Don't have an account?
+    <a tuiLink [routerLink]="['/auth/register']">Register</a>
+  </span>
+</form>
