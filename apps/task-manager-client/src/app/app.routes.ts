@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
-import { noAuthGuard } from './core/guards/no-auth.guard';
+import { authGuard } from './shared/guards/auth.guard';
+import { noAuthGuard } from './shared/guards/no-auth.guard';
 
 export const routes: Routes = [
   {
@@ -9,7 +9,11 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'tasks',
+        canMatch: [authGuard],
+        loadComponent: () =>
+          import('./features/home/pages/home-page/home-page.component').then(
+            (c) => c.HomePageComponent,
+          ),
       },
       {
         path: 'tasks',
@@ -19,7 +23,7 @@ export const routes: Routes = [
       },
     ],
     loadComponent: () =>
-      import('./core/components/main-layout/main-layout.component').then(
+      import('./shared/components/main-layout/main-layout.component').then(
         (c) => c.MainLayoutComponent,
       ),
   },
@@ -32,9 +36,9 @@ export const routes: Routes = [
   {
     path: 'not-found',
     loadComponent: () =>
-      import('./core/components/not-found/not-found.component').then(
-        (c) => c.NotFoundComponent,
-      ),
+      import(
+        './features/error-pages/pages/not-found-page/not-found-page.component'
+      ).then((c) => c.NotFoundPageComponent),
   },
   { path: '**', redirectTo: 'not-found' },
 ];

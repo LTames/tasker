@@ -23,7 +23,7 @@ export class LoginPageComponent {
   constructor() {
     this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
       if (!user) return;
-      this.router.navigate(['/tasks']);
+      this.router.navigate(['/']);
     });
   }
 

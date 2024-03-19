@@ -1,5 +1,5 @@
-import { ApiDefaultResponse } from '../../core/interfaces/api-default-response.interface';
-import { ApiValidationResponse } from '../../core/interfaces/api-validation-response.interface';
+import { ApiDefaultResponse } from './api-default-response.interface';
+import { ApiValidationResponse } from './api-validation-response.interface';
 
 export interface HttpError {
   error: Partial<ApiDefaultResponse & ApiValidationResponse>;
