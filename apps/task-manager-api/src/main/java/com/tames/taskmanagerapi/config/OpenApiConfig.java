@@ -13,26 +13,26 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-            .components(createComponents())
-            .info(createInfo());
+                .components(createComponents())
+                .info(createInfo());
     }
 
     private static Components createComponents() {
         return new Components()
-            .addSecuritySchemes("JWT", createSecurityScheme());
+                .addSecuritySchemes("JWT", createSecurityScheme());
     }
 
     private static SecurityScheme createSecurityScheme() {
         return new SecurityScheme()
-            .type(SecurityScheme.Type.HTTP)
-            .scheme("bearer")
-            .bearerFormat("JWT");
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT");
     }
 
     private static Info createInfo() {
         return new Info()
-            .title("Task Manager API")
-            .description("API for managing tasks in a Task Manager application.")
-            .version("1.0.0");
+                .title("Task Manager API")
+                .description("API for managing tasks in a Task Manager application.")
+                .version("1.0.0");
     }
 }

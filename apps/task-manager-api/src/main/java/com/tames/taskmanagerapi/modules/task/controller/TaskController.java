@@ -2,6 +2,7 @@ package com.tames.taskmanagerapi.modules.task.controller;
 
 import com.tames.taskmanagerapi.modules.task.dto.TaskRequestDto;
 import com.tames.taskmanagerapi.modules.task.dto.TaskResponseDto;
+import com.tames.taskmanagerapi.modules.task.dto.TaskStatusRequestDto;
 import com.tames.taskmanagerapi.modules.task.service.TaskService;
 import com.tames.taskmanagerapi.shared.dto.ApiDefaultResponseDto;
 import com.tames.taskmanagerapi.shared.dto.ApiValidationResponseDto;
@@ -88,6 +89,14 @@ public class TaskController {
         return new ResponseEntity<>(taskService.updateTask(taskId, body, auth.getName()), HttpStatus.OK);
     }
 
+    @PatchMapping("task-status/{taskId}")
+    public ResponseEntity<TaskResponseDto> updateTaskStatus(
+            @PathVariable("taskId") Long taskId,
+            @RequestBody TaskStatusRequestDto taskStatusRequestDto) {
+        return new ResponseEntity<>(taskService.updateTaskStatus(taskId, taskStatusRequestDto), HttpStatus.OK);
+
+    }
+
     @DeleteMapping("{taskId}")
     @Operation(summary = "Delete a task by its ID", description = "Delete a specific task by its ID")
     @ApiResponses(value = {
@@ -95,8 +104,7 @@ public class TaskController {
             @ApiResponse(responseCode = "404", description = "Task not found", content = @Content(schema = @Schema(implementation = ApiDefaultResponseDto.class)))
     })
     @Parameter(name = "id", description = "Task id", example = "1")
-    public ResponseEntity<Void> deleteTaskById(
-            @PathVariable("taskId") Long taskId) {
+    public ResponseEntity<Void> deleteTaskById(@PathVariable("taskId") Long taskId) {
         taskService.deleteTaskById(taskId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

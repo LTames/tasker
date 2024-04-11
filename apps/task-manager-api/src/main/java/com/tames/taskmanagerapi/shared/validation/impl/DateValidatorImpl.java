@@ -8,7 +8,6 @@ import java.time.DateTimeException;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 
-
 public class DateValidatorImpl implements ConstraintValidator<DateValidator, String> {
     private DateTimeFormatter dtf = null;
 

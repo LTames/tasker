@@ -16,11 +16,11 @@ import java.util.Set;
 @Entity
 @Table(name = "task")
 @NamedEntityGraphs(value = {
-    @NamedEntityGraph(name = "Task.ALL", attributeNodes = {
-        @NamedAttributeNode("categories"),
-        @NamedAttributeNode("taskAuthor"),
-        @NamedAttributeNode("comments"),
-    })
+        @NamedEntityGraph(name = "Task.ALL", attributeNodes = {
+                @NamedAttributeNode("categories"),
+                @NamedAttributeNode("taskAuthor"),
+                @NamedAttributeNode("comments"),
+        })
 })
 public class Task {
     @Id
@@ -53,12 +53,14 @@ public class Task {
     @JoinTable(name = "task_category", joinColumns = @JoinColumn(name = "task_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "task", cascade = { CascadeType.REMOVE })
     private Set<Comment> comments;
 
-    public Task() {}
+    public Task() {
+    }
 
-    public Task(String description, String title, LocalDate dueDate, Status status, Priority priority, User taskAuthor) {
+    public Task(String description, String title, LocalDate dueDate, Status status, Priority priority,
+            User taskAuthor) {
         this.description = description;
         this.title = title;
         this.dueDate = dueDate;

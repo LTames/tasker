@@ -2,7 +2,9 @@ package com.tames.taskmanagerapi.modules.task.service;
 
 import com.tames.taskmanagerapi.modules.task.dto.TaskRequestDto;
 import com.tames.taskmanagerapi.modules.task.dto.TaskResponseDto;
+import com.tames.taskmanagerapi.modules.task.dto.TaskStatusRequestDto;
 import com.tames.taskmanagerapi.modules.task.entity.Task;
+import com.tames.taskmanagerapi.modules.task.enums.Status;
 import com.tames.taskmanagerapi.modules.task.exception.TaskNotFoundException;
 import com.tames.taskmanagerapi.modules.task.mapper.TaskMapper;
 import com.tames.taskmanagerapi.modules.task.repository.TaskRepository;
@@ -23,7 +25,7 @@ public class TaskService {
         this.userService = userService;
     }
 
-    public List<TaskResponseDto> getAllTasks()  {
+    public List<TaskResponseDto> getAllTasks() {
         return taskRepository.findAll().stream().map(taskMapper::toDto).toList();
     }
 
@@ -32,8 +34,9 @@ public class TaskService {
         return taskMapper.toDto(task);
     }
 
-    public TaskResponseDto createTask(TaskRequestDto taskRequestDTO, String currentUser)  {
-        Task task = taskRepository.save(taskMapper.toEntity(taskRequestDTO, userService.getUserEntityByUsername(currentUser)));
+    public TaskResponseDto createTask(TaskRequestDto taskRequestDTO, String currentUser) {
+        Task task = taskRepository
+                .save(taskMapper.toEntity(taskRequestDTO, userService.getUserEntityByUsername(currentUser)));
         return taskMapper.toDto(task);
     }
 
@@ -46,6 +49,15 @@ public class TaskService {
         task.setDueDate(updateData.getDueDate());
         task.setPriority(updateData.getPriority());
         task.setStatus(updateData.getStatus());
+
+        return taskMapper.toDto(taskRepository.save(task));
+    }
+
+    public TaskResponseDto updateTaskStatus(Long id, TaskStatusRequestDto taskStatusRequestDto) {
+        Task task = findTaskEntityById(id);
+
+        Status newTaskStatus = Status.valueOf(taskStatusRequestDto.status());
+        task.setStatus(newTaskStatus);
 
         return taskMapper.toDto(taskRepository.save(task));
     }

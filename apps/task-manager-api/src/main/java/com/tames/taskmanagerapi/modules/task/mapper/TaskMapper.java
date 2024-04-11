@@ -24,7 +24,8 @@ public class TaskMapper {
     private final UserMapper userMapper;
     private final CategoryRepository categoryRepository;
 
-    public TaskMapper(CategoryMapper categoryMapper, CommentMapper commentMapper, UserMapper userMapper, CategoryRepository categoryRepository) {
+    public TaskMapper(CategoryMapper categoryMapper, CommentMapper commentMapper, UserMapper userMapper,
+            CategoryRepository categoryRepository) {
         this.categoryMapper = categoryMapper;
         this.commentMapper = commentMapper;
         this.userMapper = userMapper;
@@ -33,29 +34,28 @@ public class TaskMapper {
 
     public TaskResponseDto toDto(Task task) {
         return new TaskResponseDto(
-            task.getId(),
-            task.getDescription(),
-            task.getTitle(),
-            task.getDueDate(),
-            task.getStatus(),
-            task.getPriority(),
-            task.getCategories().stream().map(categoryMapper::toDto).toList(),
-            task.getComments().stream().map(commentMapper::toDto).toList(),
-            userMapper.toDto(task.getTaskAuthor())
-        );
+                task.getId(),
+                task.getDescription(),
+                task.getTitle(),
+                task.getDueDate(),
+                task.getStatus(),
+                task.getPriority(),
+                task.getCategories().stream().map(categoryMapper::toDto).toList(),
+                task.getComments().stream().map(commentMapper::toDto).toList(),
+                userMapper.toDto(task.getTaskAuthor()));
     }
 
     public Task toEntity(TaskRequestDto taskRequestDto, User currentUser) {
         Task task = new Task(
-            taskRequestDto.description(),
-            taskRequestDto.title(),
-            LocalDate.parse(taskRequestDto.dueDate(), dueDateFormatter),
-            Status.valueOf(taskRequestDto.status()),
-            Priority.valueOf(taskRequestDto.priority()),
-            currentUser
-        );
+                taskRequestDto.description(),
+                taskRequestDto.title(),
+                LocalDate.parse(taskRequestDto.dueDate(), dueDateFormatter),
+                Status.valueOf(taskRequestDto.status()),
+                Priority.valueOf(taskRequestDto.priority()),
+                currentUser);
 
-        task.setCategories(taskRequestDto.categoryIds().stream().map(categoryRepository::getReferenceById).collect(Collectors.toSet()));
+        task.setCategories(taskRequestDto.categoryIds().stream().map(categoryRepository::getReferenceById)
+                .collect(Collectors.toSet()));
 
         return task;
     }
