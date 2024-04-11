@@ -1,0 +1,97 @@
+@if (vm$ | async; as vm) {
+  <tui-loader
+    [showLoader]="!vm.categoryIdItems && vm.isLoadingTask"
+    [overlay]="true"
+    size="xxl">
+    @if (vm.taskId) {
+      <p class="text-lg my-2">
+        Currently editing task with ID:
+        <span class="font-bold">{{ vm.taskId }}</span>
+      </p>
+    }
+    <form
+      class="flex flex-col gap-4"
+      (ngSubmit)="saveTask()"
+      [formGroup]="taskForm">
+      <tui-input formControlName="title">
+        Title
+        <input tuiTextfield />
+      </tui-input>
+
+      <tui-textarea formControlName="description" [expandable]="true" [rows]="8"
+        >Description</tui-textarea
+      >
+
+      <tui-input-date formControlName="dueDate">Due date</tui-input-date>
+
+      <tui-select formControlName="status" [valueContent]="statusContent">
+        Status
+        <tui-data-list-wrapper
+          *tuiDataList
+          [itemContent]="statusContent"
+          [items]="statusItems">
+        </tui-data-list-wrapper>
+      </tui-select>
+
+      <ng-template #statusContent let-status>
+        <tui-chip size="xs" [appearance]="status">{{
+          status | replaceString: "_" : " "
+        }}</tui-chip>
+      </ng-template>
+
+      <div class="flex gap-4">
+        <tui-select
+          class="w-4/12"
+          formControlName="priority"
+          [valueContent]="priorityContent">
+          Priority
+          <tui-data-list-wrapper
+            *tuiDataList
+            [itemContent]="priorityContent"
+            [items]="priorityItems">
+          </tui-data-list-wrapper>
+        </tui-select>
+
+        <ng-template #priorityContent let-priority>
+          <tui-chip size="xs" [appearance]="priority">{{ priority }}</tui-chip>
+        </ng-template>
+
+        <tui-multi-select
+          class="w-8/12"
+          formControlName="categoryIds"
+          [stringify]="vm.categoryStringify!"
+          (searchChange)="onCategorySearch($event)"
+          >Category
+          <tui-data-list-wrapper
+            *tuiDataList
+            tuiMultiSelectGroup
+            [itemContent]="vm.categoryStringify!"
+            [items]="vm.categoryIdItems"></tui-data-list-wrapper>
+        </tui-multi-select>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button
+          class="basis-28"
+          type="submit"
+          size="m"
+          [disabled]="vm.savingTask || taskForm.invalid || taskForm.pristine"
+          [loading]="vm.savingTask"
+          tuiButton
+          iconLeft="tuiIconCheck">
+          Save
+        </button>
+
+        <button
+          class="basis-28"
+          type="button"
+          size="m"
+          (click)="closeDialog()"
+          tuiButton
+          iconLeft="tuiIconClose">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </tui-loader>
+}

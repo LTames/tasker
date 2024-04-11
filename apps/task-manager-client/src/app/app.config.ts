@@ -11,7 +11,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     provideRouter(routes),
-    importProvidersFrom(TuiRootModule, TuiAlertModule, TuiDialogModule),
+    importProvidersFrom(TuiRootModule),
     provideHttpClient(withInterceptors([jwtTokenInterceptor])),
   ],
 };

@@ -1,0 +1,23 @@
+[data-appearance="PENDING"] {
+  @apply font-bold bg-neutral-300;
+}
+
+[data-appearance="IN_PROGRESS"] {
+  @apply font-bold bg-yellow-300;
+}
+
+[data-appearance="DONE"] {
+  @apply font-bold bg-green-300;
+}
+
+[data-appearance="LOW"] {
+  @apply font-bold bg-green-300;
+}
+
+[data-appearance="MEDIUM"] {
+  @apply font-bold bg-yellow-300;
+}
+
+[data-appearance="HIGH"] {
+  @apply font-bold bg-red-300;
+}

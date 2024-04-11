@@ -1,8 +1,8 @@
-import { Injectable, inject } from '@angular/core';
-import { RegisterRequest } from '../interfaces/register-request.interface';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../../environments/environment.development';
-import { AuthResponse } from '../interfaces/auth-response.interface';
+import { Injectable, inject } from "@angular/core";
+import { RegisterRequest } from "../interfaces/register-request.interface";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { environment } from "../../../../environments/environment.development";
+import { AuthResponse } from "../interfaces/auth-response.interface";
 import {
   BehaviorSubject,
   Observable,
@@ -12,14 +12,14 @@ import {
   switchMap,
   take,
   tap,
-} from 'rxjs';
-import { LoginRequest } from '../interfaces/login-request.interface';
-import { UserResponse } from '../../user/interfaces/user-response.interface';
-import { UserService } from '../../user/services/user.service';
-import { HttpErrorService } from '../../../shared/services/http-error.service';
+} from "rxjs";
+import { LoginRequest } from "../interfaces/login-request.interface";
+import { UserResponse } from "../../user/interfaces/user-response.interface";
+import { UserService } from "../../user/services/user.service";
+import { HttpErrorService } from "../../../shared/services/http-error.service";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -46,16 +46,16 @@ export class AuthService {
   );
 
   get token() {
-    return localStorage.getItem('token');
+    return localStorage.getItem("token");
   }
 
   set token(token: string | null) {
     if (token !== null) {
-      localStorage.setItem('token', token);
+      localStorage.setItem("token", token);
       return;
     }
 
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
   }
 
   public registerUser(
@@ -69,11 +69,11 @@ export class AuthService {
       .pipe(
         tap(({ token }) => (this.token = token)),
         switchMap(() => this.getUser()),
-        catchError((error: HttpErrorResponse) =>
-          this.errorService.handleError({
-            error,
-            message: 'An error occurred during register',
-          }),
+        catchError((err: HttpErrorResponse) =>
+          this.errorService.handleError(
+            err,
+            "An error occurred during register",
+          ),
         ),
       );
   }
@@ -84,11 +84,11 @@ export class AuthService {
       .pipe(
         tap(({ token }) => (this.token = token)),
         switchMap(() => this.getUser()),
-        catchError(({ error }: HttpErrorResponse) => {
-          return this.errorService.handleError({
-            error,
-            message: 'An error occurred during login',
-          });
+        catchError((err: HttpErrorResponse) => {
+          return this.errorService.handleError(
+            err,
+            "An error occurred during login",
+          );
         }),
       );
   }

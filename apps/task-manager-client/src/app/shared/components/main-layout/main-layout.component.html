@@ -4,32 +4,29 @@
       <h1 class="text-xl md:text-2xl ml-2">Tasker 📝</h1>
     </div>
 
-    <div class="flex mr-2">
+    <div class="flex gap-2 mr-2">
       <tui-hosted-dropdown [content]="content">
         <button iconLeft="tuiIconMoreHorizontal" tuiIconButton></button>
       </tui-hosted-dropdown>
 
       <ng-template #content>
         <tui-data-list role="menu">
-          <tui-opt-group>
-            <a tuiOption routerLink="/user/profile">
-              <div class="flex items-center justify-start">
-                <tui-svg src="tuiIconUser"></tui-svg>
-                Profile
-              </div>
-            </a>
+          <a tuiOption routerLink="/user/profile" class="justify-start">
+            <tui-svg src="tuiIconUser"></tui-svg>
+            Profile
+          </a>
 
-            <button tuiOption (click)="logout()" class="justify-start">
-              <div class="flex items-center justify-start">
-                <tui-svg src="tuiIconLogOut"></tui-svg>
-                Log out
-              </div>
-            </button>
-          </tui-opt-group>
+          <button tuiOption (click)="logout()" class="justify-start">
+            <tui-svg src="tuiIconLogOut"></tui-svg>
+            Log out
+          </button>
         </tui-data-list>
       </ng-template>
 
-      <tui-avatar [rounded]="true" [text]="user.firstName" size="s"></tui-avatar>
+      <tui-avatar
+        [rounded]="true"
+        [text]="user.firstName"
+        size="s"></tui-avatar>
     </div>
   </header>
 
@@ -39,8 +36,7 @@
         <button
           tuiButton
           [iconLeft]="expanded ? 'tuiIconChevronLeft' : 'tuiIconChevronRight'"
-          (click)="toggleExpanded()"
-        >
+          (click)="toggleExpanded()">
           Collapse
         </button>
       </header>
@@ -74,7 +70,7 @@
     </aside>
 
     <main tuiNavigationMain>
-      <div class="py-8">
+      <div class="py-6">
         <router-outlet />
       </div>
     </main>

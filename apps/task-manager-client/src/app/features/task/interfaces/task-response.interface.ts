@@ -1,8 +1,8 @@
-import { CategoryResponse } from '../../category/interfaces/category-response.interface';
-import { UserResponse } from '../../user/interfaces/user-response.interface';
-import { TaskPriority } from '../enums/task-priority.enum';
-import { TaskStatus } from '../enums/task-status.enum';
-import { CommentResponse } from './comment-response.interface';
+import { CategoryResponse } from "../../category/interfaces/category-response.interface";
+import { UserResponse } from "../../user/interfaces/user-response.interface";
+import { CommentResponse } from "./comment-response.interface";
+import { TaskPriority } from "./task-priority.type";
+import { TaskStatus } from "./task-status.type";
 
 export interface TaskResponse {
   id: number;

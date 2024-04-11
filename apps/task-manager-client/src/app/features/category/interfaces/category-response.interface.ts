@@ -1,5 +1,5 @@
 export interface CategoryResponse {
   id: number;
-  content: string;
+  name: string;
   color: string;
 }

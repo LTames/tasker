@@ -1,11 +1,52 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { CdkDropListGroup } from "@angular/cdk/drag-drop";
+import { AsyncPipe, NgIf } from "@angular/common";
+import { TaskService } from "../../services/task.service";
+import { map } from "rxjs";
+import { TaskResponse } from "../../interfaces/task-response.interface";
+import { TaskListKanbanComponent } from "../../components/task-list-kanban/task-list-kanban.component";
+
+interface FilteredTasks {
+  pending: TaskResponse[];
+  inProgress: TaskResponse[];
+  done: TaskResponse[];
+}
 
 @Component({
-  selector: 'task-kanban-page',
+  selector: "task-kanban-page",
   standalone: true,
-  imports: [],
-  templateUrl: './task-kanban-page.component.html',
-  styleUrl: './task-kanban-page.component.scss',
+  imports: [CdkDropListGroup, NgIf, AsyncPipe, TaskListKanbanComponent],
+  templateUrl: "./task-kanban-page.component.html",
+  styleUrl: "./task-kanban-page.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskKanbanPageComponent {}
+export class TaskKanbanPageComponent {
+  private readonly taskService = inject(TaskService);
+
+  public readonly taskList$ = this.taskService.taskList$;
+
+  public readonly filteredTasks$ = this.taskList$.pipe(
+    map((taskList) => this.separateTasksByStatus(taskList)),
+  );
+
+  private separateTasksByStatus(tasks: TaskResponse[]) {
+    return tasks.reduce<FilteredTasks>(
+      (filter, task) => {
+        switch (task.status) {
+          case "PENDING":
+            filter.pending.push(task);
+            break;
+          case "IN_PROGRESS":
+            filter.inProgress.push(task);
+            break;
+          case "DONE":
+            filter.done.push(task);
+            break;
+        }
+
+        return filter;
+      },
+      { pending: [], inProgress: [], done: [] },
+    );
+  }
+}

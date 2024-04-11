@@ -1,0 +1,101 @@
+@if (taskOperationStatus$ | async; as tasksStatus) {
+  <h2 class="font-bold text-3xl">{{ listTitle }}</h2>
+  <ul
+    cdkDropList
+    [cdkDropListData]="taskList"
+    (cdkDropListDropped)="onDrop($event)"
+    class="relative flex grow overflow-y-auto py-2 flex-col gap-4 w-96 task-list">
+    @if (tasksStatus !== "loading") {
+      @for (task of taskList; track task.id) {
+        <li
+          (click)="editTask(task)"
+          cdkDrag
+          class="hover:cursor-pointer min-h-52 max-h-52 border border-neutral-200 rounded-3xl shadow">
+          <div class="h-full" tuiCardLarge tuiSurface>
+            <header class="flex justify-between items-center gap-4">
+              <h4
+                class="font-bold text-xl text-ellipsis overflow-hidden whitespace-nowrap">
+                {{ task.title }}
+              </h4>
+              <tui-hosted-dropdown [content]="taskCardOptions">
+                <button
+                  tuiIconButton
+                  appearance="secondary"
+                  iconLeft="tuiIconMoreVertical"
+                  size="s"></button>
+              </tui-hosted-dropdown>
+
+              <ng-template #taskCardOptions>
+                <tui-data-list size="l">
+                  <button
+                    class="justify-start"
+                    tuiOption
+                    tuiButton
+                    appearance="flat"
+                    size="s"
+                    (click)="editTask(task)">
+                    <tui-svg src="tuiIconEdit2"></tui-svg>
+                    Edit task
+                  </button>
+                  <button
+                    class="justify-start"
+                    tuiOption
+                    tuiButton
+                    appearance="flat"
+                    size="s"
+                    (click)="deleteTask(task)">
+                    <tui-svg src="tuiIconTrash2"></tui-svg>
+                    Delete task
+                  </button>
+                </tui-data-list>
+              </ng-template>
+            </header>
+
+            <section class="flex flex-col gap-1">
+              <div class="text-sm flex items-center gap-2">
+                <span class="font-bold">Priority: </span>
+                <tui-chip [appearance]="task.priority" size="xs">
+                  {{ task.priority }}
+                </tui-chip>
+              </div>
+              <div class="text-sm flex items-center gap-2">
+                <span class="font-bold">Due date: </span
+                >{{ task.dueDate | date: "dd/MM/yyyy" }}
+              </div>
+            </section>
+
+            <footer>
+              <div
+                class="text-sm flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+                <span class="font-bold">Author:</span>
+                {{ task.author.username }}
+              </div>
+            </footer>
+          </div>
+
+          <ng-container>
+            <li
+              *cdkDragPlaceholder
+              class="border-dashed border-2 border-neutral-400 rounded-3xl text-neutral-400 font-bold min-h-52 max-h-52 flex justify-center items-center">
+              Drop here
+            </li>
+          </ng-container>
+        </li>
+      } @empty {
+        <span
+          class="absolute min-w-max top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 font-bold text-xl text-neutral-600/65">
+          Your task list is empty
+        </span>
+      }
+    } @else if (tasksStatus === "loading") {
+      <li [tuiSkeleton]="true" class="rounded-3xl h-52"></li>
+      <li [tuiSkeleton]="true" class="rounded-3xl h-52"></li>
+      <li [tuiSkeleton]="true" class="rounded-3xl h-52"></li>
+      <li [tuiSkeleton]="true" class="rounded-3xl h-52"></li>
+      <li [tuiSkeleton]="true" class="rounded-3xl h-52"></li>
+    }
+  </ul>
+  <button (click)="newTask()" class="mx-8" tuiButton iconLeft="tuiIconPlus">
+    New task
+  </button>
+}

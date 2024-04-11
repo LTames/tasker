@@ -1,0 +1,11 @@
+.pending {
+  --top-border-color: theme(borderColor.neutral.300);
+}
+
+.in-progress {
+  --top-border-color: theme(borderColor.yellow.300);
+}
+
+.done {
+  --top-border-color: theme(borderColor.green.300);
+}

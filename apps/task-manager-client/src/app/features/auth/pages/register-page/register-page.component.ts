@@ -3,7 +3,6 @@ import { RegisterFormComponent } from '../../components/register-form/register-f
 import { CredentialsFormWrapperComponent } from '../../components/credentials-form-wrapper/credentials-form-wrapper.component';
 import { RegisterRequest } from '../../interfaces/register-request.interface';
 import { RegisterService } from '../../services/register.service';
-import { AuthService } from '../../services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
@@ -17,14 +16,12 @@ import { Router } from '@angular/router';
 })
 export class RegisterPageComponent {
   private readonly registerService = inject(RegisterService);
-  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
   constructor() {
-    this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
-      if (!user) return;
-      this.router.navigate(['/']);
-    });
+    this.registerService.register$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.router.navigate(['/']));
   }
 
   public handleRegister(registerDetails: RegisterRequest) {
