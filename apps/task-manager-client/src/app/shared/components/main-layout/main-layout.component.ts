@@ -1,27 +1,27 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import {
   Router,
   RouterLink,
   RouterLinkActive,
   RouterOutlet,
-} from '@angular/router';
+} from "@angular/router";
 import {
   TuiDataListModule,
   TuiExpandModule,
   TuiHostedDropdownModule,
   TuiSvgModule,
-} from '@taiga-ui/core';
+} from "@taiga-ui/core";
 import {
   TuiButtonModule,
   TuiIconModule,
   TuiNavigationModule,
-} from '@taiga-ui/experimental';
-import { TuiAvatarModule, TuiTabsModule } from '@taiga-ui/kit';
-import { AuthService } from '../../../features/auth/services/auth.service';
-import { AsyncPipe, NgIf } from '@angular/common';
+} from "@taiga-ui/experimental";
+import { TuiAvatarModule, TuiTabsModule } from "@taiga-ui/kit";
+import { AuthService } from "../../../features/auth/services/auth.service";
+import { AsyncPipe, NgIf } from "@angular/common";
 
 @Component({
-  selector: 'main-layout',
+  selector: "main-layout",
   standalone: true,
   imports: [
     TuiNavigationModule,
@@ -39,8 +39,8 @@ import { AsyncPipe, NgIf } from '@angular/common';
     NgIf,
     AsyncPipe,
   ],
-  templateUrl: './main-layout.component.html',
-  styleUrl: './main-layout.component.scss',
+  templateUrl: "./main-layout.component.html",
+  styleUrl: "./main-layout.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainLayoutComponent {
@@ -56,6 +56,6 @@ export class MainLayoutComponent {
 
   public logout() {
     this.authService.logout();
-    this.router.navigate(['/auth/login']);
+    this.router.navigate(["/auth/login"]);
   }
 }

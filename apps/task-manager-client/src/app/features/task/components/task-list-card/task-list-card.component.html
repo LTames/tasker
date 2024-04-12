@@ -1,0 +1,70 @@
+<div (click)="editTask(task)" class="h-full" tuiCardLarge tuiSurface>
+  <header class="flex justify-between items-center gap-4">
+    <h4
+      class="font-bold text-xl text-ellipsis overflow-hidden whitespace-nowrap">
+      {{ task.title }}
+    </h4>
+    <button
+      tuiIconButton
+      (click)="openTaskOptions($event)"
+      [tuiDropdown]="taskOptionsDropdown"
+      [tuiDropdownManual]="taskOptionsIsOpen"
+      (tuiActiveZoneChange)="onActiveZone($event)"
+      (tuiObscured)="onObscured($event)"
+      appearance="secondary"
+      iconLeft="tuiIconMoreVertical"
+      size="s">
+      <ng-template #taskOptionsDropdown>
+        <tui-data-list size="l">
+          <button
+            class="justify-start"
+            tuiOption
+            tuiButton
+            appearance="flat"
+            size="s"
+            (click)="editTask(task)">
+            <tui-svg src="tuiIconEdit2"></tui-svg>
+            Edit task
+          </button>
+          <button
+            class="justify-start"
+            tuiOption
+            tuiButton
+            appearance="flat"
+            size="s"
+            (click)="deleteTask(task)">
+            <tui-svg src="tuiIconTrash2"></tui-svg>
+            Delete task
+          </button>
+        </tui-data-list>
+      </ng-template>
+    </button>
+  </header>
+
+  <section class="flex flex-col gap-1">
+    <div class="text-sm flex items-center gap-2">
+      <span class="font-bold">Priority: </span>
+      <tui-chip [appearance]="task.priority" size="xs">
+        {{ task.priority }}
+      </tui-chip>
+    </div>
+    <div class="text-sm flex items-center gap-2">
+      <span class="font-bold">Due date: </span
+      >{{ task.dueDate | date: "dd/MM/yyyy" }}
+    </div>
+  </section>
+
+  <footer>
+    <div
+      class="text-sm flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+      <span class="font-bold">Author:</span>
+      {{ task.author.username }}
+    </div>
+  </footer>
+</div>
+
+<div
+  *cdkDragPlaceholder
+  class="border-dashed border-2 border-neutral-400 rounded-3xl text-neutral-400 font-bold min-h-52 max-h-52 flex justify-center items-center">
+  Drop here
+</div>

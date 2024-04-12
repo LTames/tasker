@@ -6,6 +6,19 @@
   border-top-color: var(--top-border-color);
 }
 
+.task-list::-webkit-scrollbar,
+.task-list::-webkit-scrollbar-thumb {
+  color: theme("colors.neutral.200");
+  width: 0.75rem;
+  border-radius: 1rem;
+  background-clip: padding-box;
+  border: 0.2rem solid transparent;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 0 10px;
+}
+
 .cdk-drag-placeholder {
   opacity: 1;
 }
@@ -21,37 +34,4 @@
 .cdk-drag-preview {
   list-style-type: none;
   box-shadow: theme("boxShadow.lg");
-}
-
-[tuiSurface] {
-  background-color: theme("backgroundColor.white");
-
-  .cdk-drop-list:not(.cdk-drop-list-dragging) &:hover {
-    background-color: theme("backgroundColor.neutral.100");
-  }
-}
-
-.task-list::-webkit-scrollbar,
-.task-list::-webkit-scrollbar-thumb {
-  color: theme("colors.neutral.200");
-  width: 0.75rem;
-  border-radius: 1rem;
-  background-clip: padding-box;
-  border: 0.2rem solid transparent;
-}
-
-.task-list::-webkit-scrollbar-thumb {
-  box-shadow: inset 0 0 0 10px;
-}
-
-[data-appearance="LOW"] {
-  @apply bg-green-300 font-bold;
-}
-
-[data-appearance="MEDIUM"] {
-  @apply bg-yellow-300 font-bold;
-}
-
-[data-appearance="HIGH"] {
-  @apply bg-red-300 font-bold;
 }

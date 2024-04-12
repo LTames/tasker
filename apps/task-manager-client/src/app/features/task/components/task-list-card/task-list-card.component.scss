@@ -1,0 +1,23 @@
+:host {
+  @apply hover:cursor-pointer min-h-52 max-h-52 border border-neutral-200 rounded-3xl shadow;
+}
+
+[tuiSurface] {
+  background-color: theme("backgroundColor.white");
+
+  :host-context(.cdk-drop-list):not(.cdk-drop-list-dragging) &:hover {
+    background-color: theme("backgroundColor.neutral.100");
+  }
+}
+
+[data-appearance="LOW"] {
+  @apply bg-green-300 font-bold;
+}
+
+[data-appearance="MEDIUM"] {
+  @apply bg-yellow-300 font-bold;
+}
+
+[data-appearance="HIGH"] {
+  @apply bg-red-300 font-bold;
+}
