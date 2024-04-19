@@ -56,6 +56,7 @@ export class TaskService {
   private readonly updateTaskAction$ = new Subject<UpdateTask>();
 
   public readonly taskAdded$ = this.createTaskAction$.pipe(
+    tap(() => this.statusSubject.next("creating")),
     concatMap((reqBody) =>
       this.http.post<TaskResponse>(`${environment.apiUrl}/tasks`, reqBody).pipe(
         catchError((err: HttpErrorResponse) => {
@@ -63,7 +64,6 @@ export class TaskService {
             err,
             "An error occurred while trying to save a new task",
           );
-
           this.statusSubject.next("error");
           return EMPTY;
         }),
@@ -79,6 +79,7 @@ export class TaskService {
   );
 
   public readonly taskDeleted$ = this.deleteTaskByIdAction$.pipe(
+    tap(() => this.statusSubject.next("deleting")),
     concatMap((taskId) =>
       this.http.delete<void>(`${environment.apiUrl}/tasks/${taskId}`).pipe(
         catchError((err: HttpErrorResponse) => {
@@ -86,7 +87,6 @@ export class TaskService {
             err,
             `An error occurred while trying to delete task with id: ${taskId}`,
           );
-
           this.statusSubject.next("error");
           return EMPTY;
         }),
@@ -102,6 +102,7 @@ export class TaskService {
   );
 
   public readonly taskUpdated$ = this.updateTaskAction$.pipe(
+    tap(() => this.statusSubject.next("updating")),
     concatMap(({ task, taskId }) =>
       this.http
         .put<TaskResponse>(`${environment.apiUrl}/tasks/${taskId}`, task)
@@ -111,7 +112,6 @@ export class TaskService {
               err,
               `An error occurred while trying to update task with id: ${taskId}`,
             );
-
             this.statusSubject.next("error");
             return EMPTY;
           }),
@@ -151,8 +151,6 @@ export class TaskService {
     tap(() => this.statusSubject.next("success")),
   );
 
-  constructor() {}
-
   public getTaskById(id: number) {
     return this.http
       .get<TaskResponse>(`${environment.apiUrl}/tasks/${id}`)
@@ -174,17 +172,14 @@ export class TaskService {
   }
 
   public deleteTask(taskId: number) {
-    this.statusSubject.next("deleting");
     this.deleteTaskByIdAction$.next(taskId);
   }
 
   public addTask(newTask: TaskRequest) {
-    this.statusSubject.next("creating");
     this.createTaskAction$.next(newTask);
   }
 
   public updateTask(updateTask: UpdateTask) {
-    this.statusSubject.next("updating");
     this.updateTaskAction$.next(updateTask);
   }
 }

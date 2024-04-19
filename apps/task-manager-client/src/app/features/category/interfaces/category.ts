@@ -3,3 +3,8 @@ export interface CategoryResponse {
   name: string;
   color: string;
 }
+
+export interface CategoryRequest {
+  name: string;
+  color: string;
+}
