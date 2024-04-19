@@ -16,8 +16,8 @@ import {
 import { TaskRequest } from "../interfaces/task-request.interface";
 import { HttpErrorService } from "../../../shared/services/http-error.service";
 import { TaskResponse } from "../interfaces/task-response.interface";
-import { TuiAlertService } from "@taiga-ui/core";
 import { TaskStatus } from "../interfaces/task-status.type";
+import { NotificationService } from "../../../shared/services/notification.service";
 
 type TaskOperationStatus =
   | "pending"
@@ -44,22 +44,16 @@ interface UpdateTaskStatus {
 export class TaskService {
   private readonly http = inject(HttpClient);
   private readonly errorService = inject(HttpErrorService);
-  private readonly alertService = inject(TuiAlertService);
+  private readonly notificationService = inject(NotificationService);
 
   private readonly statusSubject = new BehaviorSubject<TaskOperationStatus>(
     "pending",
   );
   public readonly status$ = this.statusSubject.asObservable();
 
-  private readonly createTaskSubject = new Subject<TaskRequest>();
-  public readonly createTaskAction$ = this.createTaskSubject.asObservable();
-
-  private readonly deleteTaskByIdSubject = new Subject<number>();
-  public readonly deleteTaskByIdAction$ =
-    this.deleteTaskByIdSubject.asObservable();
-
-  private readonly updateTaskSubject = new Subject<UpdateTask>();
-  public readonly updateTaskAction$ = this.updateTaskSubject.asObservable();
+  private readonly createTaskAction$ = new Subject<TaskRequest>();
+  private readonly deleteTaskByIdAction$ = new Subject<number>();
+  private readonly updateTaskAction$ = new Subject<UpdateTask>();
 
   public readonly taskAdded$ = this.createTaskAction$.pipe(
     concatMap((reqBody) =>
@@ -76,9 +70,10 @@ export class TaskService {
       ),
     ),
     tap(() =>
-      this.alertService
-        .open("", { status: "success", label: "Task created successfully" })
-        .subscribe(),
+      this.notificationService.openNotification({
+        status: "success",
+        label: "Task created successfully",
+      }),
     ),
     share(),
   );
@@ -98,9 +93,10 @@ export class TaskService {
       ),
     ),
     tap(() =>
-      this.alertService
-        .open("", { status: "success", label: "Task deleted successfully" })
-        .subscribe(),
+      this.notificationService.openNotification({
+        status: "success",
+        label: "Task deleted successfully",
+      }),
     ),
     share(),
   );
@@ -122,9 +118,10 @@ export class TaskService {
         ),
     ),
     tap(() =>
-      this.alertService
-        .open("", { status: "success", label: "Task updated successfully" })
-        .subscribe(),
+      this.notificationService.openNotification({
+        status: "success",
+        label: "Task updated successfully",
+      }),
     ),
     share(),
   );
@@ -178,16 +175,16 @@ export class TaskService {
 
   public deleteTask(taskId: number) {
     this.statusSubject.next("deleting");
-    this.deleteTaskByIdSubject.next(taskId);
+    this.deleteTaskByIdAction$.next(taskId);
   }
 
   public addTask(newTask: TaskRequest) {
     this.statusSubject.next("creating");
-    this.createTaskSubject.next(newTask);
+    this.createTaskAction$.next(newTask);
   }
 
   public updateTask(updateTask: UpdateTask) {
     this.statusSubject.next("updating");
-    this.updateTaskSubject.next(updateTask);
+    this.updateTaskAction$.next(updateTask);
   }
 }

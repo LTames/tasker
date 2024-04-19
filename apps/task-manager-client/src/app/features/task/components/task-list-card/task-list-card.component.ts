@@ -24,6 +24,7 @@ import { SaveTaskDialogComponent } from "../save-task-dialog/save-task-dialog.co
 import { TaskService } from "../../services/task.service";
 import { DatePipe } from "@angular/common";
 import { TuiActiveZoneModule, TuiObscuredModule } from "@taiga-ui/cdk";
+import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: "task-list-card",
@@ -39,6 +40,7 @@ import { TuiActiveZoneModule, TuiObscuredModule } from "@taiga-ui/cdk";
     DatePipe,
     TuiActiveZoneModule,
     TuiObscuredModule,
+    CdkDragPlaceholder,
   ],
   templateUrl: "./task-list-card.component.html",
   styleUrl: "./task-list-card.component.scss",

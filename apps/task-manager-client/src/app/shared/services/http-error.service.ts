@@ -1,15 +1,15 @@
 import { Injectable, inject } from "@angular/core";
-import { TuiAlertService } from "@taiga-ui/core";
 import { throwError } from "rxjs";
 import { ApiValidationResponse } from "../interfaces/api-validation-response.interface";
 import { ApiDefaultResponse } from "../interfaces/api-default-response.interface";
 import { HttpErrorResponse } from "@angular/common/http";
+import { NotificationService } from "./notification.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class HttpErrorService {
-  private readonly alertService = inject(TuiAlertService);
+  private readonly notificationService = inject(NotificationService);
 
   public handleError({ error }: HttpErrorResponse, message: string) {
     const errorDetail =
@@ -17,13 +17,11 @@ export class HttpErrorService {
       (error as ApiValidationResponse).fieldErrors?.join(", ") ||
       "";
 
-    // auto completes
-    this.alertService
-      .open(errorDetail, {
-        status: "error",
-        label: message,
-      })
-      .subscribe();
+    this.notificationService.openNotification({
+      status: "error",
+      label: message,
+      content: errorDetail,
+    });
 
     return throwError(() => message);
   }
