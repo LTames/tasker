@@ -27,7 +27,6 @@ import {
   TuiLoaderModule,
 } from "@taiga-ui/core";
 import { TaskService } from "../../services/task.service";
-import { TaskRequest } from "../../interfaces/task-request.interface";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { CategoryService } from "../../../category/services/category.service";
 import {
@@ -37,8 +36,6 @@ import {
   TuiHandler,
   tuiIsNumber,
 } from "@taiga-ui/cdk";
-import { TaskStatus } from "../../interfaces/task-status.type";
-import { TaskPriority } from "../../interfaces/task-priority.type";
 import {
   TuiDataListWrapperModule,
   TuiInputDateModule,
@@ -50,6 +47,7 @@ import {
 import { TuiButtonModule, TuiChipModule } from "@taiga-ui/experimental";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ReplaceStringPipe } from "../../../../shared/pipes/replace-string.pipe";
+import { CreateTask, TaskPriority, TaskStatus } from "../../interfaces/task";
 
 @Component({
   selector: "save-task-dialog",
@@ -141,7 +139,7 @@ export class SaveTaskDialogComponent implements OnInit {
   ]).pipe(map(([selectedTask, taskId]) => Boolean(taskId && !selectedTask)));
 
   public readonly savingTask$ = this.taskService.status$.pipe(
-    map((status) => status === "creating" || status === "updating"),
+    map((status) => status === "CREATING" || status === "UPDATING"),
   );
 
   private readonly search$ = new Subject<string>();
@@ -219,10 +217,10 @@ export class SaveTaskDialogComponent implements OnInit {
     if (taskId) {
       this.taskService.updateTask({
         taskId,
-        task: this.taskForm.value as TaskRequest,
+        task: this.taskForm.value as CreateTask,
       });
     } else {
-      this.taskService.addTask(this.taskForm.value as TaskRequest);
+      this.taskService.addTask(this.taskForm.value as CreateTask);
     }
   }
 

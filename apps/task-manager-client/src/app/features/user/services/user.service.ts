@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { environment } from "../../../../environments/environment";
-import { UserResponse } from "../interfaces/user-response.interface";
 import { catchError } from "rxjs";
 import { HttpErrorService } from "../../../shared/services/http-error.service";
+import { User } from "../interfaces/user";
 
 @Injectable({
   providedIn: "root",
@@ -15,7 +15,7 @@ export class UserService {
   constructor() {}
 
   public getUser() {
-    return this.http.get<UserResponse>(`${environment.apiUrl}/users/me`).pipe(
+    return this.http.get<User>(`${environment.apiUrl}/users/me`).pipe(
       catchError((err: HttpErrorResponse) => {
         return this.errorService.handleError(
           err,

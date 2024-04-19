@@ -5,7 +5,6 @@ import {
   Input,
   inject,
 } from "@angular/core";
-import { TaskResponse } from "../../interfaces/task-response.interface";
 import {
   CdkDrag,
   CdkDragDrop,
@@ -20,9 +19,9 @@ import { AsyncPipe } from "@angular/common";
 import { SaveTaskDialogComponent } from "../save-task-dialog/save-task-dialog.component";
 import { PolymorpheusComponent } from "@tinkoff/ng-polymorpheus";
 import { TaskService } from "../../services/task.service";
-import { TaskStatus } from "../../interfaces/task-status.type";
 import { TaskListCardComponent } from "../task-list-card/task-list-card.component";
 import { TuiRepeatTimesModule } from "@taiga-ui/cdk";
+import { Task, TaskStatus } from "../../interfaces/task";
 
 @Component({
   selector: "task-list-kanban",
@@ -48,7 +47,7 @@ export class TaskListKanbanComponent {
   private readonly injector = inject(Injector);
 
   @Input({ required: true }) listTitle!: string;
-  @Input({ required: true }) taskList!: TaskResponse[];
+  @Input({ required: true }) taskList!: Task[];
   @Input({ required: true }) listTaskStatus!: TaskStatus;
 
   public readonly taskOperationStatus$ = this.taskService.status$;
@@ -58,7 +57,7 @@ export class TaskListKanbanComponent {
     previousIndex,
     container,
     previousContainer,
-  }: CdkDragDrop<TaskResponse[]>) {
+  }: CdkDragDrop<Task[]>) {
     if (container === previousContainer) {
       moveItemInArray(container.data, previousIndex, currentIndex);
       return;

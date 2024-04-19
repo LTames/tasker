@@ -6,7 +6,6 @@ import {
   Input,
   inject,
 } from "@angular/core";
-import { TaskResponse } from "../../interfaces/task-response.interface";
 import {
   TuiButtonModule,
   TuiCardModule,
@@ -25,6 +24,7 @@ import { TaskService } from "../../services/task.service";
 import { DatePipe } from "@angular/common";
 import { TuiActiveZoneModule, TuiObscuredModule } from "@taiga-ui/cdk";
 import { CdkDragPlaceholder } from "@angular/cdk/drag-drop";
+import { Task } from "../../interfaces/task";
 
 @Component({
   selector: "task-list-card",
@@ -51,10 +51,10 @@ export class TaskListCardComponent {
   private readonly injector = inject(Injector);
   private readonly taskService = inject(TaskService);
 
-  @Input({ required: true }) task!: TaskResponse;
+  @Input({ required: true }) task!: Task;
   public taskOptionsIsOpen = false;
 
-  public editTask(selectedTask: TaskResponse) {
+  public editTask(selectedTask: Task) {
     this.dialogService
       .open(new PolymorpheusComponent(SaveTaskDialogComponent, this.injector), {
         closeable: false,
@@ -64,7 +64,7 @@ export class TaskListCardComponent {
       .subscribe();
   }
 
-  public deleteTask(selectedTask: TaskResponse) {
+  public deleteTask(selectedTask: Task) {
     this.dialogService
       .open<boolean>(TUI_PROMPT, {
         closeable: false,

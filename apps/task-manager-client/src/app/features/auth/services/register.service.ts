@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject } from "@angular/core";
 import {
   BehaviorSubject,
   EMPTY,
@@ -6,19 +6,18 @@ import {
   catchError,
   exhaustMap,
   tap,
-} from 'rxjs';
-import { RegisterStatus } from '../types/register-status.type';
-import { RegisterRequest } from '../interfaces/register-request.interface';
-import { AuthService } from './auth.service';
+} from "rxjs";
+import { AuthService } from "./auth.service";
+import { RegisterRequest, RegisterStatus } from "../interfaces/auth";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class RegisterService {
   private readonly authService = inject(AuthService);
 
   private readonly statusSubject = new BehaviorSubject<RegisterStatus>(
-    'pending',
+    "PENDING",
   );
   public readonly status$ = this.statusSubject.asObservable();
 
@@ -26,19 +25,19 @@ export class RegisterService {
   public readonly registerAction$ = this.registerSubject.asObservable();
 
   public readonly register$ = this.registerAction$.pipe(
+    tap(() => this.statusSubject.next("CREATING")),
     exhaustMap((registerDetails) =>
       this.authService.registerUser(registerDetails).pipe(
         catchError(() => {
-          this.statusSubject.next('error');
+          this.statusSubject.next("ERROR");
           return EMPTY;
         }),
       ),
     ),
-    tap(() => this.statusSubject.next('success')),
+    tap(() => this.statusSubject.next("SUCCESS")),
   );
 
   public register(registerDetails: RegisterRequest) {
-    this.statusSubject.next('creating');
     this.registerSubject.next(registerDetails);
   }
 }

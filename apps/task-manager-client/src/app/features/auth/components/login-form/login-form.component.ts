@@ -1,25 +1,25 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgIf } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Output,
   inject,
-} from '@angular/core';
+} from "@angular/core";
 import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
-} from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { TuiInputModule, TuiInputPasswordModule } from '@taiga-ui/kit';
-import { TuiButtonModule } from '@taiga-ui/experimental';
-import { TuiLinkModule } from '@taiga-ui/core';
-import { LoginService } from '../../services/login.service';
-import { LoginRequest } from '../../interfaces/login-request.interface';
+} from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { TuiInputModule, TuiInputPasswordModule } from "@taiga-ui/kit";
+import { TuiButtonModule } from "@taiga-ui/experimental";
+import { TuiLinkModule } from "@taiga-ui/core";
+import { LoginService } from "../../services/login.service";
+import { LoginRequest } from "../../interfaces/auth";
 
 @Component({
-  selector: 'login-form',
+  selector: "login-form",
   standalone: true,
   imports: [
     TuiInputModule,
@@ -31,8 +31,8 @@ import { LoginRequest } from '../../interfaces/login-request.interface';
     NgIf,
     TuiLinkModule,
   ],
-  templateUrl: './login-form.component.html',
-  styleUrl: './login-form.component.scss',
+  templateUrl: "./login-form.component.html",
+  styleUrl: "./login-form.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginFormComponent {
@@ -45,8 +45,8 @@ export class LoginFormComponent {
   public readonly loginStatus$ = this.loginService.status$;
 
   public readonly loginForm = this.formBuilder.group({
-    username: ['', [Validators.required]],
-    password: ['', [Validators.required]],
+    username: ["", [Validators.required]],
+    password: ["", [Validators.required]],
   });
 
   constructor() {}

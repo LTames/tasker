@@ -5,7 +5,7 @@
     [cdkDropListData]="taskList"
     (cdkDropListDropped)="onDrop($event)"
     class="relative flex grow overflow-y-auto py-2 flex-col gap-4 w-96 task-list">
-    @if (tasksStatus !== "loading") {
+    @if (tasksStatus !== "LOADING") {
       @for (task of taskList; track task.id) {
         <task-list-card cdkDrag [task]="task" />
       } @empty {
@@ -14,7 +14,7 @@
           Your task list is empty
         </span>
       }
-    } @else if (tasksStatus === "loading") {
+    } @else if (tasksStatus === "LOADING") {
       <div
         *tuiRepeatTimes="let i of 6"
         [tuiSkeleton]="true"

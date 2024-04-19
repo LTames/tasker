@@ -1,10 +1,10 @@
-export interface CategoryResponse {
+export interface Category {
   id: number;
   name: string;
   color: string;
 }
 
-export interface CategoryRequest {
+export interface CreateCategory {
   name: string;
   color: string;
 }

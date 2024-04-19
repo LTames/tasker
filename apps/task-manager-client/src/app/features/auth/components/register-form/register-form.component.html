@@ -1,7 +1,6 @@
 <form
   *ngIf="registerStatus$ | async as registerStatus"
-  [formGroup]="registerForm"
->
+  [formGroup]="registerForm">
   <tui-input formControlName="firstName" class="mb-5">
     First name
     <input tuiTextfield />
@@ -20,13 +19,12 @@
   </tui-input-password>
 
   <button
-    [disabled]="registerForm.invalid || registerStatus === 'creating'"
+    [disabled]="registerForm.invalid || registerStatus === 'CREATING'"
     (click)="submitRegisterForm()"
     tuiButton
     size="m"
     class="w-full mb-4"
-    [loading]="registerStatus === 'creating'"
-  >
+    [loading]="registerStatus === 'CREATING'">
     Create account
   </button>
 

@@ -1,8 +1,6 @@
 import { Injectable, inject } from "@angular/core";
-import { RegisterRequest } from "../interfaces/register-request.interface";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "../../../../environments/environment.development";
-import { AuthResponse } from "../interfaces/auth-response.interface";
 import {
   BehaviorSubject,
   Observable,
@@ -13,10 +11,14 @@ import {
   take,
   tap,
 } from "rxjs";
-import { LoginRequest } from "../interfaces/login-request.interface";
-import { UserResponse } from "../../user/interfaces/user-response.interface";
 import { UserService } from "../../user/services/user.service";
 import { HttpErrorService } from "../../../shared/services/http-error.service";
+import {
+  AuthResponse,
+  LoginRequest,
+  RegisterRequest,
+} from "../interfaces/auth";
+import { User } from "../../user/interfaces/user";
 
 @Injectable({
   providedIn: "root",
@@ -26,7 +28,7 @@ export class AuthService {
   private readonly userService = inject(UserService);
   private readonly errorService = inject(HttpErrorService);
 
-  private readonly userSource = new BehaviorSubject<UserResponse | null>(null);
+  private readonly userSource = new BehaviorSubject<User | null>(null);
   public readonly user$ = this.userSource.asObservable();
 
   public readonly isLoggedIn$ = this.user$.pipe(
@@ -58,9 +60,7 @@ export class AuthService {
     localStorage.removeItem("token");
   }
 
-  public registerUser(
-    registerRequest: RegisterRequest,
-  ): Observable<UserResponse> {
+  public registerUser(registerRequest: RegisterRequest): Observable<User> {
     return this.http
       .post<AuthResponse>(
         `${environment.apiUrl}/auth/register`,
@@ -78,7 +78,7 @@ export class AuthService {
       );
   }
 
-  public loginUser(loginRequest: LoginRequest): Observable<UserResponse> {
+  public loginUser(loginRequest: LoginRequest): Observable<User> {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/auth/login`, loginRequest)
       .pipe(
@@ -98,7 +98,7 @@ export class AuthService {
     this.userSource.next(null);
   }
 
-  private getUser(): Observable<UserResponse> {
+  private getUser(): Observable<User> {
     return this.userService
       .getUser()
       .pipe(tap((user) => this.userSource.next(user)));

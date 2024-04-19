@@ -13,13 +13,13 @@ import {
   switchMap,
   tap,
 } from "rxjs";
-import { CategoryRequest, CategoryResponse } from "../interfaces/category";
+import { Category, CreateCategory } from "../interfaces/category";
 import { HttpErrorService } from "../../../shared/services/http-error.service";
 import { NotificationService } from "../../../shared/services/notification.service";
 
 interface UpdateCategory {
   categoryId: number;
-  category: CategoryRequest;
+  category: CreateCategory;
 }
 
 type CategoryOperationStatus =
@@ -39,7 +39,7 @@ export class CategoryService {
   private readonly errorService = inject(HttpErrorService);
   private readonly notificationService = inject(NotificationService);
 
-  public readonly categoryState$ = this.http.get<CategoryResponse[]>(
+  public readonly categoryState$ = this.http.get<Category[]>(
     `${environment.apiUrl}/categories`,
   );
 
@@ -47,22 +47,24 @@ export class CategoryService {
     new BehaviorSubject<CategoryOperationStatus>("pending");
   public readonly categoryStatus$ = this.categoryStatusSubject.asObservable();
 
-  private readonly addCategoryAction$ = new Subject<CategoryRequest>();
+  private readonly addCategoryAction$ = new Subject<CreateCategory>();
   private readonly deleteCategoryByIdAction$ = new Subject<number>();
   private readonly updateCategoryAction$ = new Subject<UpdateCategory>();
 
   public readonly categoryAdded$ = this.addCategoryAction$.pipe(
     tap(() => this.categoryStatusSubject.next("creating")),
     concatMap((newCategory) =>
-      this.http.post(`${environment.apiUrl}/categories`, newCategory).pipe(
-        catchError((err: HttpErrorResponse) => {
-          this.errorService.handleError(
-            err,
-            "An error occurred while trying to save a new category",
-          );
-          return EMPTY;
-        }),
-      ),
+      this.http
+        .post<Category>(`${environment.apiUrl}/categories`, newCategory)
+        .pipe(
+          catchError((err: HttpErrorResponse) => {
+            this.errorService.handleError(
+              err,
+              "An error occurred while trying to save a new category",
+            );
+            return EMPTY;
+          }),
+        ),
     ),
     tap(() =>
       this.notificationService.openNotification({
@@ -76,15 +78,17 @@ export class CategoryService {
   public readonly categoryDeleted$ = this.deleteCategoryByIdAction$.pipe(
     tap(() => this.categoryStatusSubject.next("deleting")),
     concatMap((categoryId) =>
-      this.http.delete(`${environment.apiUrl}/categories/${categoryId}`).pipe(
-        catchError((err: HttpErrorResponse) => {
-          this.errorService.handleError(
-            err,
-            `An error occurred while trying to delete category with id: ${categoryId}`,
-          );
-          return EMPTY;
-        }),
-      ),
+      this.http
+        .delete<void>(`${environment.apiUrl}/categories/${categoryId}`)
+        .pipe(
+          catchError((err: HttpErrorResponse) => {
+            this.errorService.handleError(
+              err,
+              `An error occurred while trying to delete category with id: ${categoryId}`,
+            );
+            return EMPTY;
+          }),
+        ),
     ),
     tap(() =>
       this.notificationService.openNotification({
@@ -99,7 +103,10 @@ export class CategoryService {
     tap(() => this.categoryStatusSubject.next("updating")),
     concatMap(({ category, categoryId }) =>
       this.http
-        .put(`${environment.apiUrl}/categories/${categoryId}`, category)
+        .put<Category>(
+          `${environment.apiUrl}/categories/${categoryId}`,
+          category,
+        )
         .pipe(
           catchError((err: HttpErrorResponse) => {
             this.errorService.handleError(
@@ -129,17 +136,15 @@ export class CategoryService {
     startWith(null),
     tap(() => this.categoryStatusSubject.next("loading")),
     switchMap(() =>
-      this.http
-        .get<CategoryResponse[]>(`${environment.apiUrl}/categories`)
-        .pipe(
-          catchError((err: HttpErrorResponse) => {
-            this.errorService.handleError(
-              err,
-              "An error occurred while trying to get your categories",
-            );
-            return EMPTY;
-          }),
-        ),
+      this.http.get<Category[]>(`${environment.apiUrl}/categories`).pipe(
+        catchError((err: HttpErrorResponse) => {
+          this.errorService.handleError(
+            err,
+            "An error occurred while trying to get your categories",
+          );
+          return EMPTY;
+        }),
+      ),
     ),
     tap(() => this.categoryStatusSubject.next("success")),
   );
@@ -164,7 +169,7 @@ export class CategoryService {
     this.deleteCategoryByIdAction$.next(categoryId);
   }
 
-  public createCategory(newCategory: CategoryRequest) {
+  public createCategory(newCategory: CreateCategory) {
     this.addCategoryAction$.next(newCategory);
   }
 }

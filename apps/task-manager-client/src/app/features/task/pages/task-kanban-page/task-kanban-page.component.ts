@@ -3,13 +3,13 @@ import { CdkDropListGroup } from "@angular/cdk/drag-drop";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { TaskService } from "../../services/task.service";
 import { map } from "rxjs";
-import { TaskResponse } from "../../interfaces/task-response.interface";
 import { TaskListKanbanComponent } from "../../components/task-list-kanban/task-list-kanban.component";
+import { Task } from "../../interfaces/task";
 
 interface FilteredTasks {
-  pending: TaskResponse[];
-  inProgress: TaskResponse[];
-  done: TaskResponse[];
+  pending: Task[];
+  inProgress: Task[];
+  done: Task[];
 }
 
 @Component({
@@ -29,7 +29,7 @@ export class TaskKanbanPageComponent {
     map((taskList) => this.separateTasksByStatus(taskList)),
   );
 
-  private separateTasksByStatus(tasks: TaskResponse[]) {
+  private separateTasksByStatus(tasks: Task[]) {
     return tasks.reduce<FilteredTasks>(
       (filter, task) => {
         switch (task.status) {

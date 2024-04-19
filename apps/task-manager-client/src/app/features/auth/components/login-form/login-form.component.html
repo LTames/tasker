@@ -9,13 +9,12 @@
   </tui-input-password>
 
   <button
-    [disabled]="loginForm.invalid || loginStatus === 'authenticating'"
+    [disabled]="loginForm.invalid || loginStatus === 'AUTHENTICATING'"
     (click)="submitForm()"
     tuiButton
     size="m"
     class="w-full mb-4"
-    [loading]="loginStatus === 'authenticating'"
-  >
+    [loading]="loginStatus === 'AUTHENTICATING'">
     Login
   </button>
 

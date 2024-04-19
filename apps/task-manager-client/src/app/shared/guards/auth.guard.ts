@@ -1,7 +1,7 @@
-import { inject } from '@angular/core';
-import { CanMatchFn, Router } from '@angular/router';
-import { AuthService } from '../../features/auth/services/auth.service';
-import { map, tap } from 'rxjs';
+import { inject } from "@angular/core";
+import { CanMatchFn, Router } from "@angular/router";
+import { AuthService } from "../../features/auth/services/auth.service";
+import { map, tap } from "rxjs";
 
 export const authGuard: CanMatchFn = (route, segments) => {
   const authService = inject(AuthService);
@@ -9,7 +9,7 @@ export const authGuard: CanMatchFn = (route, segments) => {
 
   return authService.isLoggedIn$.pipe(
     map((isLoggedIn) =>
-      isLoggedIn ? true : router.createUrlTree(['/auth/login']),
+      isLoggedIn ? true : router.createUrlTree(["/auth/login"]),
     ),
   );
 };
