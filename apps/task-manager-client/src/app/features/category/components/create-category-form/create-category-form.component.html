@@ -1,0 +1,37 @@
+<div class="w-full" tuiCardLarge tuiSurface="elevated">
+  <h3 class="font-bold text-xl">{{ categoryFormHeader }}</h3>
+  <form
+    class="w-full flex flex-col gap-4"
+    [formGroup]="categoryForm"
+    (ngSubmit)="submitCategory()">
+    <tui-input formControlName="name">
+      Name
+      <input tuiTextfield />
+    </tui-input>
+
+    Background color
+    <input type="color" formControlName="color" />
+
+    <div class="flex gap-3">
+      <button
+        class="flex-1"
+        iconLeft="tuiIconCheck"
+        [disabled]="saving || categoryForm.invalid"
+        [loading]="saving"
+        tuiButton
+        size="m"
+        type="submit">
+        Save
+      </button>
+      <button
+        class="flex-1"
+        iconLeft="tuiIconX"
+        tuiButton
+        size="m"
+        (click)="cancelSubmit()"
+        type="button">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

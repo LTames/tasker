@@ -14,7 +14,6 @@ import {
   filter,
   map,
   merge,
-  shareReplay,
   startWith,
   switchMap,
   tap,
@@ -107,9 +106,7 @@ export class SaveTaskDialogComponent implements OnInit {
     this.dialogContext.data.taskId ?? null,
   );
 
-  private readonly categories$ = this.categoryService.categoryState$.pipe(
-    shareReplay(1),
-  );
+  private readonly categories$ = this.categoryService.categories$;
 
   public readonly selectedTask$ = this.taskId$.pipe(
     filter((taskId): taskId is number => taskId !== null),

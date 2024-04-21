@@ -1,0 +1,71 @@
+<div class="p-4 h-[80vh] w-[30rem]" tuiCardLarge tuiSurface="elevated">
+  @if (categoryStatus !== "LOADING") {
+    <tui-scrollbar class="mt-0">
+      <table class="w-full" tuiTable [columns]="columns">
+        <thead>
+          <tr tuiThGroup>
+            <th [sticky]="true" *tuiHead="'id'" tuiTh>ID</th>
+            <th [sticky]="true" *tuiHead="'name'" tuiTh>Name</th>
+            <th [sticky]="true" *tuiHead="'color'" [sorter]="null" tuiTh>
+              Color
+            </th>
+            <th [sticky]="true" *tuiHead="'actions'" [sorter]="null" tuiTh></th>
+          </tr>
+        </thead>
+
+        <tbody
+          *tuiLet="categories | tuiTableSort as sortedCategories"
+          tuiTbody
+          [data]="sortedCategories">
+          @for (category of sortedCategories; track category.id) {
+            <tr
+              [ngClass]="{
+                selected: selectedCategory?.id === category.id
+              }"
+              class="row cursor-pointer group"
+              (click)="selectRow(category)"
+              tuiTr>
+              <td *tuiCell="'id'" tuiTd>
+                {{ category.id }}
+              </td>
+              <td *tuiCell="'name'" tuiTd>
+                {{ category.name }}
+              </td>
+              <td *tuiCell="'color'" tuiTd>
+                <div
+                  [tuiHint]="hexCodeTooltip"
+                  tuiHintDirection="top"
+                  class="size-8 rounded border shadow"
+                  [ngStyle]="{ backgroundColor: category.color }"></div>
+                <ng-template #hexCodeTooltip
+                  ><span>{{ category.color }}</span>
+                </ng-template>
+              </td>
+              <td
+                *tuiCell="'actions'"
+                class="flex justify-center items-center"
+                tuiTd>
+                <button
+                  class="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 rounded-full"
+                  iconLeft="tuiIconTrash"
+                  size="s"
+                  tuiIconButton
+                  (click)="deleteCategory(category, $event)"></button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4">
+                <p class="mt-4 flex justify-center">
+                  Your categoy list is empty.
+                </p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </tui-scrollbar>
+  } @else {
+    <div>loading...</div>
+  }
+</div>

@@ -21,6 +21,14 @@ export const routes: Routes = [
         loadChildren: () =>
           import("./features/task/task.routes").then((r) => r.TASK_ROUTES),
       },
+      {
+        path: "categories",
+        canMatch: [authGuard],
+        loadChildren: () =>
+          import("./features/category/category.routes").then(
+            (r) => r.CATEGORY_ROUTES,
+          ),
+      },
     ],
     loadComponent: () =>
       import("./shared/components/main-layout/main-layout.component").then(

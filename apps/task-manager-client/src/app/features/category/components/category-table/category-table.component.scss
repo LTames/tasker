@@ -1,0 +1,12 @@
+:host {
+  @apply flex flex-col gap-4 items-center;
+}
+
+td {
+  @apply transition;
+
+  .row:hover &,
+  .row.selected & {
+    @apply bg-neutral-200;
+  }
+}

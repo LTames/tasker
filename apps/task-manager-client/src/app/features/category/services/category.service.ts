@@ -7,29 +7,21 @@ import {
   Subject,
   catchError,
   concatMap,
+  map,
   merge,
   share,
   startWith,
   switchMap,
   tap,
 } from "rxjs";
-import { Category, CreateCategory } from "../interfaces/category";
 import { HttpErrorService } from "../../../shared/services/http-error.service";
 import { NotificationService } from "../../../shared/services/notification.service";
-
-interface UpdateCategory {
-  categoryId: number;
-  category: CreateCategory;
-}
-
-type CategoryOperationStatus =
-  | "pending"
-  | "loading"
-  | "deleting"
-  | "creating"
-  | "updating"
-  | "success"
-  | "error";
+import {
+  Category,
+  CategoryOperationStatus,
+  CreateCategory,
+  UpdateCategory,
+} from "../interfaces/category";
 
 @Injectable({
   providedIn: "root",
@@ -39,12 +31,13 @@ export class CategoryService {
   private readonly errorService = inject(HttpErrorService);
   private readonly notificationService = inject(NotificationService);
 
-  public readonly categoryState$ = this.http.get<Category[]>(
-    `${environment.apiUrl}/categories`,
-  );
+  private readonly selectedCategorySource =
+    new BehaviorSubject<Category | null>(null);
+  public readonly selectedCategory$ =
+    this.selectedCategorySource.asObservable();
 
   private readonly categoryStatusSubject =
-    new BehaviorSubject<CategoryOperationStatus>("pending");
+    new BehaviorSubject<CategoryOperationStatus>("PENDING");
   public readonly categoryStatus$ = this.categoryStatusSubject.asObservable();
 
   private readonly addCategoryAction$ = new Subject<CreateCategory>();
@@ -52,7 +45,7 @@ export class CategoryService {
   private readonly updateCategoryAction$ = new Subject<UpdateCategory>();
 
   public readonly categoryAdded$ = this.addCategoryAction$.pipe(
-    tap(() => this.categoryStatusSubject.next("creating")),
+    tap(() => this.categoryStatusSubject.next("CREATING")),
     concatMap((newCategory) =>
       this.http
         .post<Category>(`${environment.apiUrl}/categories`, newCategory)
@@ -62,6 +55,7 @@ export class CategoryService {
               err,
               "An error occurred while trying to save a new category",
             );
+            this.categoryStatusSubject.next("ERROR");
             return EMPTY;
           }),
         ),
@@ -76,7 +70,7 @@ export class CategoryService {
   );
 
   public readonly categoryDeleted$ = this.deleteCategoryByIdAction$.pipe(
-    tap(() => this.categoryStatusSubject.next("deleting")),
+    tap(() => this.categoryStatusSubject.next("DELETING")),
     concatMap((categoryId) =>
       this.http
         .delete<void>(`${environment.apiUrl}/categories/${categoryId}`)
@@ -86,8 +80,10 @@ export class CategoryService {
               err,
               `An error occurred while trying to delete category with id: ${categoryId}`,
             );
+            this.categoryStatusSubject.next("ERROR");
             return EMPTY;
           }),
+          map(() => categoryId),
         ),
     ),
     tap(() =>
@@ -100,7 +96,7 @@ export class CategoryService {
   );
 
   public readonly categoryUpdated$ = this.updateCategoryAction$.pipe(
-    tap(() => this.categoryStatusSubject.next("updating")),
+    tap(() => this.categoryStatusSubject.next("UPDATING")),
     concatMap(({ category, categoryId }) =>
       this.http
         .put<Category>(
@@ -113,6 +109,7 @@ export class CategoryService {
               err,
               `An error occurred while trying to update category with id: ${categoryId}`,
             );
+            this.categoryStatusSubject.next("ERROR");
             return EMPTY;
           }),
         ),
@@ -127,14 +124,14 @@ export class CategoryService {
   );
 
   private readonly categoryEvents$ = merge(
-    this.addCategoryAction$,
-    this.deleteCategoryByIdAction$,
-    this.updateCategoryAction$,
-  ).pipe(tap(() => this.categoryStatusSubject.next("success")));
+    this.categoryAdded$,
+    this.categoryDeleted$,
+    this.categoryUpdated$,
+  ).pipe(tap(() => this.categoryStatusSubject.next("SUCCESS")));
 
   public readonly categories$ = this.categoryEvents$.pipe(
     startWith(null),
-    tap(() => this.categoryStatusSubject.next("loading")),
+    tap(() => this.categoryStatusSubject.next("LOADING")),
     switchMap(() =>
       this.http.get<Category[]>(`${environment.apiUrl}/categories`).pipe(
         catchError((err: HttpErrorResponse) => {
@@ -142,11 +139,13 @@ export class CategoryService {
             err,
             "An error occurred while trying to get your categories",
           );
+          this.categoryStatusSubject.next("ERROR");
           return EMPTY;
         }),
       ),
     ),
-    tap(() => this.categoryStatusSubject.next("success")),
+    tap(() => this.categoryStatusSubject.next("SUCCESS")),
+    share(),
   );
 
   public getCategoryById(categoryId: number) {
@@ -171,5 +170,9 @@ export class CategoryService {
 
   public createCategory(newCategory: CreateCategory) {
     this.addCategoryAction$.next(newCategory);
+  }
+
+  public setSelectedCategory(category: Category | null) {
+    this.selectedCategorySource.next(category);
   }
 }

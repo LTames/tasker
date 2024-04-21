@@ -1,0 +1,18 @@
+@if (vm$ | async; as vm) {
+  {{ vm.selectedCategory | json }}
+  {{ vm.savingCategory | json }}
+  <div class="flex gap-8 justify-center">
+    <category-table
+      [categories]="vm.categories"
+      [selectedCategory]="vm.selectedCategory"
+      [categoryStatus]="vm.categoryStatus"
+      (categorySelected)="handleCategorySelect($event)"
+      (categoryDelete)="handleCategoryDelete($event)" />
+    <create-category-form
+      #categoryForm
+      [category]="vm.selectedCategory"
+      [saving]="vm.savingCategory"
+      (cancel)="handleFormCancel()"
+      (categorySubmit)="handleCategorySubmit($event)" />
+  </div>
+}

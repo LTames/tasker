@@ -132,6 +132,7 @@ export class TaskService {
       ),
     ),
     tap(() => this.statusSubject.next("SUCCESS")),
+    share(),
   );
 
   public getTaskById(id: number) {

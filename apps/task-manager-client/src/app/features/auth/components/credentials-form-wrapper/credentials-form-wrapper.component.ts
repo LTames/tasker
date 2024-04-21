@@ -15,5 +15,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CredentialsFormWrapperComponent {
-  @Input({ required: true }) header: string = "";
+  @Input({ required: true }) header!: string;
 }
