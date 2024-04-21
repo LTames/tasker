@@ -7,18 +7,24 @@ import {
 import {
   BehaviorSubject,
   EMPTY,
-  Observable,
-  Subject,
   catchError,
   combineLatest,
   filter,
   map,
   merge,
+  share,
   startWith,
   switchMap,
   tap,
 } from "rxjs";
-import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import {
+  AsyncPipe,
+  JsonPipe,
+  NgFor,
+  NgIf,
+  NgStyle,
+  NgTemplateOutlet,
+} from "@angular/common";
 import { POLYMORPHEUS_CONTEXT } from "@tinkoff/ng-polymorpheus";
 import {
   TuiDataListModule,
@@ -26,27 +32,29 @@ import {
   TuiLoaderModule,
 } from "@taiga-ui/core";
 import { TaskService } from "../../services/task.service";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { CategoryService } from "../../../category/services/category.service";
 import {
-  TUI_DATE_SEPARATOR,
-  TuiContextWithImplicit,
-  TuiDay,
-  TuiHandler,
-  tuiIsNumber,
-} from "@taiga-ui/cdk";
+  FormBuilder,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
+import { CategoryService } from "../../../category/services/category.service";
+import { TUI_DATE_SEPARATOR, TuiDay } from "@taiga-ui/cdk";
 import {
   TuiDataListWrapperModule,
   TuiInputDateModule,
   TuiInputModule,
+  TuiInputTagModule,
   TuiMultiSelectModule,
   TuiSelectModule,
+  TuiTagModule,
   TuiTextareaModule,
 } from "@taiga-ui/kit";
 import { TuiButtonModule, TuiChipModule } from "@taiga-ui/experimental";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ReplaceStringPipe } from "../../../../shared/pipes/replace-string.pipe";
 import { CreateTask, TaskPriority, TaskStatus } from "../../interfaces/task";
+import { Category } from "../../../category/interfaces/category";
 
 @Component({
   selector: "save-task-dialog",
@@ -67,6 +75,12 @@ import { CreateTask, TaskPriority, TaskStatus } from "../../interfaces/task";
     NgFor,
     ReplaceStringPipe,
     TuiChipModule,
+    NgStyle,
+    JsonPipe,
+    NgTemplateOutlet,
+    TuiTagModule,
+    FormsModule,
+    TuiInputTagModule,
   ],
   templateUrl: "./save-task-dialog.component.html",
   styleUrl: "./save-task-dialog.component.scss",
@@ -139,57 +153,30 @@ export class SaveTaskDialogComponent implements OnInit {
     map((status) => status === "CREATING" || status === "UPDATING"),
   );
 
-  private readonly search$ = new Subject<string>();
-  public readonly categoryIdItems$ = combineLatest([
-    this.categories$,
-    this.search$.pipe(startWith("")),
-  ]).pipe(
-    map(([categories, search]) =>
-      categories
-        .filter(({ name }) => name.includes(search))
-        .map(({ id }) => id),
-    ),
+  public readonly categoryIdItems$ = this.categories$.pipe(
+    map((categories) => categories.map(({ id }) => id)),
   );
 
-  public readonly categoryStringify$: Observable<
-    TuiHandler<TuiContextWithImplicit<number> | number, string>
-  > = this.categories$.pipe(
+  public readonly mappedCategories$ = this.categories$.pipe(
     map(
       (categories) =>
-        new Map(categories.map<[number, string]>(({ id, name }) => [id, name])),
+        new Map(
+          categories.map<[number, Pick<Category, "color" | "name">]>(
+            ({ id, ...categoryContent }) => [id, categoryContent],
+          ),
+        ),
     ),
     startWith(new Map()),
-    map(
-      (categoriesMap) => (id: TuiContextWithImplicit<number> | number) =>
-        tuiIsNumber(id)
-          ? categoriesMap.get(id)
-          : categoriesMap.get(id.$implicit),
-    ),
+    share(),
   );
 
-  public readonly vm$ = combineLatest([
-    this.categoryIdItems$.pipe(startWith(null)),
-    this.categoryStringify$.pipe(startWith(null)),
-    this.savingTask$,
-    this.isLoadingTask$,
-    this.taskId$,
-  ]).pipe(
-    map(
-      ([
-        categoryIdItems,
-        categoryStringify,
-        savingTask,
-        isLoadingTask,
-        taskId,
-      ]) => ({
-        categoryIdItems,
-        categoryStringify,
-        savingTask,
-        isLoadingTask,
-        taskId,
-      }),
-    ),
-  );
+  public readonly vm$ = combineLatest({
+    categoryIdItems: this.categoryIdItems$.pipe(startWith(null)),
+    mappedCategories: this.mappedCategories$,
+    savingTask: this.savingTask$,
+    isLoadingTask: this.isLoadingTask$,
+    taskId: this.taskId$,
+  });
 
   constructor() {
     merge(this.taskService.taskUpdated$, this.taskService.taskAdded$)
@@ -202,10 +189,6 @@ export class SaveTaskDialogComponent implements OnInit {
     if (initialTaskStatus) {
       this.taskForm.patchValue({ status: initialTaskStatus });
     }
-  }
-
-  public onCategorySearch(search: string | null) {
-    this.search$.next(search ?? "");
   }
 
   public saveTask() {

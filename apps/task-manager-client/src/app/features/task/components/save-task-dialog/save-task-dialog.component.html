@@ -31,13 +31,13 @@
           [itemContent]="statusContent"
           [items]="statusItems">
         </tui-data-list-wrapper>
-      </tui-select>
 
-      <ng-template #statusContent let-status>
-        <tui-chip size="xs" [appearance]="status">{{
-          status | replaceString: "_" : " "
-        }}</tui-chip>
-      </ng-template>
+        <ng-template #statusContent let-status>
+          <tui-chip size="xs" [appearance]="status">{{
+            status | replaceString: "_" : " "
+          }}</tui-chip>
+        </ng-template>
+      </tui-select>
 
       <div class="flex gap-4">
         <tui-select
@@ -50,23 +50,48 @@
             [itemContent]="priorityContent"
             [items]="priorityItems">
           </tui-data-list-wrapper>
+
+          <ng-template #priorityContent let-priority>
+            <tui-chip size="xs" [appearance]="priority">
+              {{ priority }}
+            </tui-chip>
+          </ng-template>
         </tui-select>
 
-        <ng-template #priorityContent let-priority>
-          <tui-chip size="xs" [appearance]="priority">{{ priority }}</tui-chip>
-        </ng-template>
-
         <tui-multi-select
-          class="w-8/12"
           formControlName="categoryIds"
-          [stringify]="vm.categoryStringify!"
-          (searchChange)="onCategorySearch($event)"
-          >Category
+          class="w-8/12 b-form"
+          [valueContent]="multipleCategories"
+          [editable]="false"
+          [expandable]="false">
+          Categories
           <tui-data-list-wrapper
             *tuiDataList
             tuiMultiSelectGroup
-            [itemContent]="vm.categoryStringify!"
-            [items]="vm.categoryIdItems"></tui-data-list-wrapper>
+            [itemContent]="categoryContent"
+            [items]="vm.categoryIdItems">
+          </tui-data-list-wrapper>
+
+          <ng-template #multipleCategories let-categoryIds>
+            <ng-container *ngFor="let categoryId of categoryIds">
+              <ng-container
+                *ngTemplateOutlet="
+                  categoryContent;
+                  context: { $implicit: categoryId }
+                "></ng-container>
+            </ng-container>
+          </ng-template>
+
+          <ng-template #categoryContent let-categoryId>
+            <tui-chip
+              class="mr-1 font-bold"
+              size="xs"
+              [ngStyle]="{
+                backgroundColor: vm.mappedCategories.get(categoryId).color
+              }">
+              {{ vm.mappedCategories.get(categoryId).name }}
+            </tui-chip>
+          </ng-template>
         </tui-multi-select>
       </div>
 
