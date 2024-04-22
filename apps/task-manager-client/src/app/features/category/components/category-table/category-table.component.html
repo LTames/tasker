@@ -1,7 +1,11 @@
 <div class="p-4 h-[80vh] w-[30rem]" tuiCardLarge tuiSurface="elevated">
-  @if (categoryStatus !== "LOADING") {
-    <tui-scrollbar class="mt-0">
-      <table class="w-full" tuiTable [columns]="columns">
+  <tui-scrollbar class="grow [&>*]:h-full mt-0">
+    <tui-loader
+      class="h-full"
+      [showLoader]="categoryStatus === 'LOADING' && !categories"
+      size="xxl"
+      [overlay]="true">
+      <table *ngIf="categories" class="w-full" tuiTable [columns]="columns">
         <thead>
           <tr tuiThGroup>
             <th [sticky]="true" *tuiHead="'id'" tuiTh>ID</th>
@@ -14,7 +18,7 @@
         </thead>
 
         <tbody
-          *tuiLet="categories | tuiTableSort as sortedCategories"
+          *tuiLet="categories! | tuiTableSort as sortedCategories"
           tuiTbody
           [data]="sortedCategories">
           @for (category of sortedCategories; track category.id) {
@@ -64,8 +68,6 @@
           }
         </tbody>
       </table>
-    </tui-scrollbar>
-  } @else {
-    <div>loading...</div>
-  }
+    </tui-loader>
+  </tui-scrollbar>
 </div>

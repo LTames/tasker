@@ -25,6 +25,7 @@ import {
 } from "@taiga-ui/experimental";
 import {
   TuiHintModule,
+  TuiLoaderModule,
   TuiScrollbarModule,
   TuiSvgModule,
 } from "@taiga-ui/core";
@@ -49,13 +50,14 @@ import {
     NgClass,
     JsonPipe,
     TuiScrollbarModule,
+    TuiLoaderModule,
   ],
   templateUrl: "./category-table.component.html",
   styleUrl: "./category-table.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryTableComponent {
-  @Input({ required: true }) categories!: Category[];
+  @Input({ required: true }) categories!: Category[] | null;
   @Input({ required: true }) selectedCategory!: Category | null;
   @Input({ required: true }) categoryStatus!: CategoryOperationStatus;
 

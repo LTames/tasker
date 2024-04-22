@@ -9,7 +9,14 @@ import { CreateCategoryFormComponent } from "../../components/create-category-fo
 import { TuiCardModule } from "@taiga-ui/experimental";
 import { AsyncPipe, JsonPipe } from "@angular/common";
 import { CategoryService } from "../../services/category.service";
-import { Subject, combineLatest, map, merge, withLatestFrom } from "rxjs";
+import {
+  Subject,
+  combineLatest,
+  map,
+  merge,
+  startWith,
+  withLatestFrom,
+} from "rxjs";
 import { Category, CreateCategory } from "../../interfaces/category";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -33,12 +40,11 @@ export class CategoryListPageComponent {
 
   private readonly categoryService = inject(CategoryService);
   private readonly submitAction$ = new Subject<CreateCategory>();
-  private readonly deleteAction$ = new Subject<Category>();
 
   public readonly vm$ = combineLatest({
     selectedCategory: this.categoryService.selectedCategory$,
     categoryStatus: this.categoryService.categoryStatus$,
-    categories: this.categoryService.categories$,
+    categories: this.categoryService.categories$.pipe(startWith(null)),
     savingCategory: this.categoryService.categoryStatus$.pipe(
       map((status) => status === "CREATING" || status === "UPDATING"),
     ),
@@ -69,8 +75,7 @@ export class CategoryListPageComponent {
       .pipe(takeUntilDestroyed())
       .subscribe(([selectedCategory, deletedCategoryId]) => {
         if (selectedCategory?.id === deletedCategoryId) {
-          this.categoryService.setSelectedCategory(null);
-          this.formComponent.categoryForm.reset();
+          this.resetSelectionAndFormState();
         }
       });
 
@@ -79,10 +84,7 @@ export class CategoryListPageComponent {
       this.categoryService.categoryUpdated$,
     )
       .pipe(takeUntilDestroyed())
-      .subscribe(() => {
-        this.categoryService.setSelectedCategory(null);
-        this.formComponent.categoryForm.reset();
-      });
+      .subscribe(() => this.resetSelectionAndFormState());
   }
 
   public handleCategorySubmit(category: CreateCategory) {
@@ -99,5 +101,10 @@ export class CategoryListPageComponent {
 
   public handleCategorySelect(selectedCategory: Category) {
     this.categoryService.setSelectedCategory(selectedCategory);
+  }
+
+  private resetSelectionAndFormState() {
+    this.categoryService.setSelectedCategory(null);
+    this.formComponent.categoryForm.reset({ color: "#000000" });
   }
 }

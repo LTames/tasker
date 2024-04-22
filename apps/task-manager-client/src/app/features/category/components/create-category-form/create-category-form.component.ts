@@ -41,7 +41,7 @@ export class CreateCategoryFormComponent implements OnChanges {
 
   public readonly categoryForm = this.formBuilder.group({
     name: ["", [Validators.required, Validators.maxLength(32)]],
-    color: ["", Validators.required],
+    color: ["#000000", Validators.required],
   });
 
   public get categoryFormHeader() {
@@ -51,7 +51,7 @@ export class CreateCategoryFormComponent implements OnChanges {
   }
 
   ngOnChanges({ category }: SimpleChanges) {
-    const categoryValue = category.currentValue;
+    const categoryValue = category?.currentValue;
 
     if (categoryValue) {
       this.categoryForm.patchValue(categoryValue);
