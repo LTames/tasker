@@ -11,9 +11,11 @@ import { AsyncPipe, JsonPipe } from "@angular/common";
 import { CategoryService } from "../../services/category.service";
 import {
   Subject,
+  catchError,
   combineLatest,
   map,
   merge,
+  of,
   startWith,
   withLatestFrom,
 } from "rxjs";
@@ -44,7 +46,10 @@ export class CategoryListPageComponent {
   public readonly vm$ = combineLatest({
     selectedCategory: this.categoryService.selectedCategory$,
     categoryStatus: this.categoryService.categoryStatus$,
-    categories: this.categoryService.categories$.pipe(startWith(null)),
+    categories: this.categoryService.categories$.pipe(
+      catchError(() => of([])),
+      startWith(null),
+    ),
     savingCategory: this.categoryService.categoryStatus$.pipe(
       map((status) => status === "CREATING" || status === "UPDATING"),
     ),

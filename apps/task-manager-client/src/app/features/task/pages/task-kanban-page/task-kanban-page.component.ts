@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { CdkDropListGroup } from "@angular/cdk/drag-drop";
 import { AsyncPipe, NgIf } from "@angular/common";
 import { TaskService } from "../../services/task.service";
-import { map } from "rxjs";
+import { catchError, map, of } from "rxjs";
 import { TaskListKanbanComponent } from "../../components/task-list-kanban/task-list-kanban.component";
 import { Task } from "../../interfaces/task";
 
@@ -23,7 +23,9 @@ interface FilteredTasks {
 export class TaskKanbanPageComponent {
   private readonly taskService = inject(TaskService);
 
-  public readonly taskList$ = this.taskService.taskList$;
+  public readonly taskList$ = this.taskService.taskList$.pipe(
+    catchError(() => of([])),
+  );
 
   public readonly filteredTasks$ = this.taskList$.pipe(
     map((taskList) => this.separateTasksByStatus(taskList)),

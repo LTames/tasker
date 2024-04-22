@@ -12,6 +12,7 @@ import {
   startWith,
   switchMap,
   tap,
+  throwError,
 } from "rxjs";
 import { HttpErrorService } from "../../../shared/services/http-error.service";
 import { NotificationService } from "../../../shared/services/notification.service";
@@ -127,7 +128,7 @@ export class TaskService {
           );
 
           this.statusSubject.next("ERROR");
-          return EMPTY;
+          return throwError(() => err);
         }),
       ),
     ),

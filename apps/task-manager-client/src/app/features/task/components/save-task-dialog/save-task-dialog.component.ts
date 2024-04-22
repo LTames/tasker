@@ -12,6 +12,7 @@ import {
   filter,
   map,
   merge,
+  of,
   share,
   startWith,
   switchMap,
@@ -19,7 +20,6 @@ import {
 } from "rxjs";
 import {
   AsyncPipe,
-  JsonPipe,
   NgFor,
   NgIf,
   NgStyle,
@@ -32,22 +32,15 @@ import {
   TuiLoaderModule,
 } from "@taiga-ui/core";
 import { TaskService } from "../../services/task.service";
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { CategoryService } from "../../../category/services/category.service";
 import { TUI_DATE_SEPARATOR, TuiDay } from "@taiga-ui/cdk";
 import {
   TuiDataListWrapperModule,
   TuiInputDateModule,
   TuiInputModule,
-  TuiInputTagModule,
   TuiMultiSelectModule,
   TuiSelectModule,
-  TuiTagModule,
   TuiTextareaModule,
 } from "@taiga-ui/kit";
 import { TuiButtonModule, TuiChipModule } from "@taiga-ui/experimental";
@@ -116,7 +109,9 @@ export class SaveTaskDialogComponent implements OnInit {
     this.dialogContext.data.taskId ?? null,
   );
 
-  private readonly categories$ = this.categoryService.categories$;
+  private readonly categories$ = this.categoryService.categories$.pipe(
+    catchError(() => of([])),
+  );
 
   public readonly selectedTask$ = this.taskId$.pipe(
     filter((taskId): taskId is number => taskId !== null),

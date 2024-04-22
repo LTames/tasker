@@ -13,6 +13,7 @@ import {
   startWith,
   switchMap,
   tap,
+  throwError,
 } from "rxjs";
 import { HttpErrorService } from "../../../shared/services/http-error.service";
 import { NotificationService } from "../../../shared/services/notification.service";
@@ -140,7 +141,7 @@ export class CategoryService {
             "An error occurred while trying to get your categories",
           );
           this.categoryStatusSubject.next("ERROR");
-          return EMPTY;
+          return throwError(() => err);
         }),
       ),
     ),
