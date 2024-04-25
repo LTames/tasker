@@ -20,10 +20,11 @@ public class Category {
     @Column(name = "color")
     private String color;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "categories", cascade = CascadeType.REMOVE)
     private List<Task> tasks;
 
-    public Category() {}
+    public Category() {
+    }
 
     public Category(String name, String color) {
         this.name = name;
