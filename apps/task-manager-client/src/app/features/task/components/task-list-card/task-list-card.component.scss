@@ -1,9 +1,10 @@
 :host {
-  @apply hover:cursor-pointer min-h-52 max-h-52 border border-neutral-200 rounded-3xl shadow;
+  @apply hover:cursor-pointer w-full min-h-36 sm:min-h-44 md:min-h-52  border border-neutral-200 rounded-3xl shadow;
 }
 
 [tuiSurface] {
   background-color: theme("backgroundColor.white");
+  --t-gap: 0rem;
 
   :host-context(.cdk-drop-list):not(.cdk-drop-list-dragging) &:hover {
     background-color: theme("backgroundColor.neutral.100");

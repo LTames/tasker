@@ -1,4 +1,4 @@
-<div class="w-full" tuiCardLarge tuiSurface="elevated">
+<div tuiCardLarge tuiSurface="elevated">
   <h3 class="font-bold text-xl">{{ categoryFormHeader }}</h3>
   <form
     class="w-full flex flex-col gap-4"
@@ -9,8 +9,25 @@
       <input tuiTextfield />
     </tui-input>
 
-    Background color
-    <input type="color" formControlName="color" />
+    <tui-input
+      [maskito]="colorMask"
+      [tuiTextfieldCustomContent]="color"
+      formControlName="color">
+      Background color
+    </tui-input>
+    <ng-template #color>
+      <input
+        class="color"
+        [value]="categoryForm.value.color"
+        formControlName="color"
+        type="color"
+        (click.stop)="(0)"
+        (mousedown.stop)="(0)" />
+      <tui-svg appearance="icon" src="tuiIconPaintLarge" tuiWrapper></tui-svg>
+      <hr
+        class="color-indicator"
+        [style.background]="categoryForm.value.color" />
+    </ng-template>
 
     <div class="flex gap-3">
       <button

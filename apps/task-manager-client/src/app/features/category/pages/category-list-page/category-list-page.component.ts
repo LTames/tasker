@@ -7,7 +7,7 @@ import {
 import { CategoryTableComponent } from "../../components/category-table/category-table.component";
 import { CreateCategoryFormComponent } from "../../components/create-category-form/create-category-form.component";
 import { TuiCardModule } from "@taiga-ui/experimental";
-import { AsyncPipe, JsonPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { CategoryService } from "../../services/category.service";
 import {
   Subject,
@@ -31,7 +31,6 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
     TuiCardModule,
     AsyncPipe,
     CreateCategoryFormComponent,
-    JsonPipe,
   ],
   templateUrl: "./category-list-page.component.html",
   styleUrl: "./category-list-page.component.scss",
@@ -97,7 +96,7 @@ export class CategoryListPageComponent {
   }
 
   public handleFormCancel() {
-    this.categoryService.setSelectedCategory(null);
+    this.resetSelectionAndFormState();
   }
 
   public handleCategoryDelete(category: Category) {

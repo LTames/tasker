@@ -8,14 +8,7 @@ import {
 import { Category, CategoryOperationStatus } from "../../interfaces/category";
 import { TuiTableModule } from "@taiga-ui/addon-table";
 import { TuiLetModule } from "@taiga-ui/cdk";
-import {
-  AsyncPipe,
-  JsonPipe,
-  NgClass,
-  NgFor,
-  NgIf,
-  NgStyle,
-} from "@angular/common";
+import { AsyncPipe, NgClass, NgFor, NgIf, NgStyle } from "@angular/common";
 import {
   TuiButtonGroupModule,
   TuiButtonModule,
@@ -48,7 +41,6 @@ import {
     NgIf,
     AsyncPipe,
     NgClass,
-    JsonPipe,
     TuiScrollbarModule,
     TuiLoaderModule,
   ],

@@ -1,7 +1,11 @@
-<div (click)="editTask(task)" class="h-full" tuiCardLarge tuiSurface>
+<div
+  (click)="editTask(task)"
+  class="h-full p-4 md:p-6 gap-2 justify-between"
+  tuiCardLarge
+  tuiSurface>
   <header class="flex justify-between items-center gap-4">
     <h4
-      class="font-bold text-xl text-ellipsis overflow-hidden whitespace-nowrap">
+      class="font-bold text-sm sm:text-lg md:text-xl text-ellipsis overflow-hidden whitespace-nowrap">
       {{ task.title }}
     </h4>
     <button
@@ -41,30 +45,31 @@
     </button>
   </header>
 
-  <section class="flex flex-col gap-1">
-    <div class="text-sm flex items-center gap-2">
+  <section class="text-xs sm:text-base flex flex-col gap-1">
+    <div class="flex items-center gap-2">
       <span class="font-bold">Priority: </span>
       <tui-chip [appearance]="task.priority" size="xs">
         {{ task.priority }}
       </tui-chip>
     </div>
-    <div class="text-sm flex items-center gap-2">
-      <span class="font-bold">Due date: </span
-      >{{ task.dueDate | date: "dd/MM/yyyy" }}
+    <div class="flex items-center gap-2">
+      <span class="font-bold">Due date: </span>
+      <span>{{ task.dueDate | date: "dd/MM/yyyy" }}</span>
     </div>
   </section>
 
-  <footer>
-    <div
-      class="text-sm flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
+  <footer class="m-0 text-xs sm:text-base">
+    <div class="flex items-center gap-2">
       <span class="font-bold">Author:</span>
-      {{ task.author.username }}
+      <span class="overflow-hidden text-ellipsis whitespace-nowrap">
+        {{ task.author.username }}
+      </span>
     </div>
   </footer>
 </div>
 
 <div
   *cdkDragPlaceholder
-  class="border-dashed border-2 border-neutral-400 rounded-3xl text-neutral-400 font-bold min-h-52 max-h-52 flex justify-center items-center">
+  class="border-dashed border-2 border-neutral-400 rounded-3xl text-neutral-400 font-bold min-h-36 sm:min-h-44 md:min-h-52 flex justify-center items-center">
   Drop here
 </div>

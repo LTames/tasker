@@ -1,15 +1,20 @@
-<div class="flex items-center justify-center gap-16 select-none">
-  <img
-    [draggable]="false"
-    src="/assets/home-image.svg"
-    alt="Two people with a task list and a checked item"
-  />
+<div
+  class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 select-none">
   <div>
-    <h2 class="font-bold text-6xl mb-4">Simplify Your Life with Tasker 📝</h2>
-    <p class="text-xl mb-4 max-w-prose">
+    <img
+      [draggable]="false"
+      src="/assets/home-image.svg"
+      class="size-52 sm:size-72 md:w-full md:h-full"
+      alt="Two people with a task list and a checked item" />
+  </div>
+  <div>
+    <h2 class="font-bold text-4xl sm:text-4xl md:text-6xl mb-4">
+      Simplify Your Life with Tasker 📝
+    </h2>
+    <p class="text-lg sm:text-xl mb-4 max-w-prose">
       Tasker helps you stay organized and focused, making task management a
       breeze. Take control of your day and accomplish more with ease.
     </p>
-    <a [routerLink]="['/tasks']" tuiButton>Get started</a>
+    <a [routerLink]="['/tasks']" class="h-10 sm:h-14" tuiButton>Get started</a>
   </div>
 </div>

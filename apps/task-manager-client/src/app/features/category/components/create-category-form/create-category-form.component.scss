@@ -1,3 +1,26 @@
 :host {
-  @apply w-96;
+  @apply w-full md:max-w-96;
+}
+
+.color {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: auto;
+  cursor: pointer;
+
+  &:hover + tui-svg {
+    opacity: 0.65;
+  }
+}
+
+.color-indicator {
+  position: absolute;
+  width: 1.4rem;
+  height: 0.3rem;
+  bottom: 0.3125rem;
+  border-radius: 0.125rem;
 }

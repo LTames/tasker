@@ -1,11 +1,15 @@
-<div class="p-4 h-[80vh] w-[30rem]" tuiCardLarge tuiSurface="elevated">
-  <tui-scrollbar class="grow [&>*]:h-full mt-0">
+<div class="p-4 h-[80vh] overflow-x-auto" tuiCardLarge tuiSurface="elevated">
+  <tui-scrollbar class="grow [&>*]:h-full [&>*]:w-full mt-0">
     <tui-loader
       class="h-full"
       [showLoader]="categoryStatus === 'LOADING' && !categories"
       size="xxl"
       [overlay]="true">
-      <table *ngIf="categories" class="w-full" tuiTable [columns]="columns">
+      <table
+        *ngIf="categories"
+        class="w-full max-h-full overflow-x-auto"
+        tuiTable
+        [columns]="columns">
         <thead>
           <tr tuiThGroup>
             <th [sticky]="true" *tuiHead="'id'" tuiTh>ID</th>

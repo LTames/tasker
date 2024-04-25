@@ -1,8 +1,7 @@
 :host {
-  @apply flex flex-col gap-4 bg-slate-50 rounded-lg border border-neutral-200 p-5 shadow-md border-t-8;
-
   --top-border-color: theme(colors.neutral.300);
 
+  @apply flex flex-col gap-4 bg-slate-50 rounded-lg border border-neutral-200 p-5 shadow-md border-t-8;
   border-top-color: var(--top-border-color);
 }
 

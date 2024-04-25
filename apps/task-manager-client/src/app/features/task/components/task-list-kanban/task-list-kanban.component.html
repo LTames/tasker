@@ -1,10 +1,12 @@
 @if (taskOperationStatus$ | async; as tasksStatus) {
-  <h2 class="font-bold text-3xl">{{ listTitle }}</h2>
+  <h2 class="font-bold text-xl md:text-2xl lg:text-3xl">
+    {{ listTitle }}
+  </h2>
   <ul
     cdkDropList
     [cdkDropListData]="taskList"
     (cdkDropListDropped)="onDrop($event)"
-    class="relative flex grow overflow-y-auto py-2 flex-col gap-4 w-96 task-list">
+    class="relative flex grow overflow-y-auto py-2 flex-col gap-4 w-[12rem] sm:w-[15rem] md:w-[17rem] lg:w-[19rem] xl:w-[22rem] task-list">
     @if (tasksStatus !== "LOADING") {
       @for (task of taskList; track task.id) {
         <task-list-card cdkDrag [task]="task" />
@@ -21,7 +23,11 @@
         class="rounded-3xl min-h-52 max-h-52"></div>
     }
   </ul>
-  <button (click)="newTask()" class="mx-8" tuiButton iconLeft="tuiIconPlus">
+  <button
+    (click)="newTask()"
+    class="sm:mx-2 md:mx-4 lg:mx-8"
+    tuiButton
+    iconLeft="tuiIconPlus">
     New task
   </button>
 }
