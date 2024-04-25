@@ -13,3 +13,16 @@
 .list-group {
   justify-content: safe center;
 }
+
+.list-group::-webkit-scrollbar,
+.list-group::-webkit-scrollbar-thumb {
+  color: theme("colors.neutral.200");
+  height: 1rem;
+  border-radius: 1rem;
+  background-clip: padding-box;
+  border: 0.2rem solid transparent;
+}
+
+.list-group::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 0 10px;
+}

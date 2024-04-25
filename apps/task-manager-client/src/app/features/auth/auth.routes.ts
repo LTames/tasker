@@ -5,10 +5,12 @@ import { RegisterPageComponent } from "./pages/register-page/register-page.compo
 export const AUTH_ROUTES: Routes = [
   {
     path: "login",
+    title: "Login",
     component: LoginPageComponent,
   },
   {
     path: "register",
+    title: "Register",
     component: RegisterPageComponent,
   },
 ];

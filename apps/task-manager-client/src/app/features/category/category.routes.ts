@@ -4,6 +4,7 @@ import { CategoryListPageComponent } from "./pages/category-list-page/category-l
 export const CATEGORY_ROUTES: Routes = [
   {
     path: "",
+    title: "Categories",
     component: CategoryListPageComponent,
   },
 ];
