@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5000/task_manager_db
-    password: postgres
-    username: postgres
+    url: jdbc:postgresql://localhost:5000/tasker
+    password: user
+    username: user
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,9 +17,9 @@ springdoc:
 
 jwt:
   private:
-    key: classpath:private.pem
+    key: file:./private.pem
   public:
-    key: classpath:public.pem
+    key: file:./public.pem
 
 server:
   servlet:

@@ -1,15 +1,18 @@
-volumes:
-  pgdata:
-
 services:
-  postgres_db:
+  postgres-db:
     image: postgres:16.1-alpine3.19
     ports:
       - 5000:5432
-    restart: always
     environment:
-      - POSTGRES_DB=task_manager_db
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      POSTGRES_DB: tasker
+      POSTGRES_PASSWORD: user
+      POSTGRES_USER: user
+
+  spring-app:
+    image: backend-tasker:latest
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5000/tasker
+    depends_on:
+      - postgres-db
