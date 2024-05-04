@@ -94,7 +94,6 @@ public class TaskController {
             @PathVariable("taskId") Long taskId,
             @RequestBody TaskStatusRequestDto taskStatusRequestDto) {
         return new ResponseEntity<>(taskService.updateTaskStatus(taskId, taskStatusRequestDto), HttpStatus.OK);
-
     }
 
     @DeleteMapping("{taskId}")
