@@ -29,7 +29,11 @@ export class TaskKanbanPageComponent {
 
   public readonly filteredTasks$ = this.taskList$.pipe(
     map((taskList) => this.separateTasksByStatus(taskList)),
-    startWith([]),
+    startWith({
+      pending: [],
+      inProgress: [],
+      done: [],
+    }),
   );
 
   private separateTasksByStatus(tasks: Task[]) {
