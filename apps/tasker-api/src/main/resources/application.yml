@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5000/tasker
-    password: user
-    username: user
+    url: jdbc:postgresql://localhost:5000/tasker-db
+    password: tasker
+    username: tasker
   jpa:
     hibernate:
       ddl-auto: update
