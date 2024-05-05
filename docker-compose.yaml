@@ -1,25 +1,17 @@
-services:
-  spring-app:
-    build:
-      context: apps/tasker-api
-      tags:
-        - tasker-backend:latest
-    depends_on:
-      - postgres-db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:4500/tasker
-    restart: always
-    ports:
-      - 8080:8080
+volumes:
+  data:
 
-  postgres-db:
+services:
+  db:
     image: postgres:16.2-alpine3.19
     environment:
-      POSTGRES_DB: tasker
-      POSTGRES_PASSWORD: user
-      POSTGRES_USER: user
+      POSTGRES_DB: tasker-db
+      POSTGRES_PASSWORD: tasker
+      POSTGRES_USER: tasker
+    volumes:
+      - data:/var/lib/postgresql/data
     ports:
-      - 4500:5432
+      - 5000:5432
 
   angular-app:
     build:
@@ -32,3 +24,17 @@ services:
       - spring-app
     ports:
       - 4200:80
+
+  spring-app:
+    build:
+      context: apps/tasker-api
+      tags:
+        - tasker-backend:latest
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/tasker-db
+      SPRING_DATASOURCE_USERNAME: tasker
+      SPRING_DATASOURCE_PASSWORD: tasker
+    ports:
+      - 8080:8080
