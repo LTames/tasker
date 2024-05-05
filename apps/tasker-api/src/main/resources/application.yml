@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5000/tasker
+    url: jdbc:postgresql://localhost:4500/tasker
     password: user
     username: user
   jpa:

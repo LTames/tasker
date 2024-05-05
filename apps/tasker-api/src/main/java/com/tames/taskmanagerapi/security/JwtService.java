@@ -19,7 +19,7 @@ public class JwtService {
 
     public String generateToken(Authentication authentication) {
         JwtClaimsSet claims  = JwtClaimsSet.builder()
-            .issuer("tames-task-manager")
+            .issuer("tasker")
             .issuedAt(Instant.now())
             .expiresAt(Instant.now().plus(24, ChronoUnit.HOURS))
             .subject(authentication.getName())
